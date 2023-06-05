@@ -8,10 +8,10 @@ namespace FrogExebitionAPI.Services
 {
     public class FrogService : IFrogService
     {
-        private readonly UnitOfWork _unitOfWork;
-        private readonly ILogger<FrogsController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<FrogService> _logger;
 
-        public FrogService(UnitOfWork unitOfWork, ILogger<FrogsController> logger)
+        public FrogService(IUnitOfWork unitOfWork, ILogger<FrogService> logger)
         { 
             _unitOfWork = unitOfWork;
             _logger = logger;

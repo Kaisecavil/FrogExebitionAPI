@@ -113,7 +113,8 @@ namespace FrogExebitionAPI.Repositories.Implementations
 
         public async Task<bool> IsEmpty()
         {
-            return await _context.Frogs.AsNoTracking().IsNullOrEmpty();
+            //return _context.Frogs.AsNoTracking().IsNullOrEmpty();
+            return !await _context.Frogs.AsNoTracking().AnyAsync();
         }
     }
 }

@@ -9,6 +9,8 @@ using FrogExebitionAPI.Database;
 using FrogExebitionAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 using FrogExebitionAPI.UoW;
+using FrogExebitionAPI.Services;
+using FrogExebitionAPI.Exceptions;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -17,20 +19,29 @@ namespace FrogExebitionAPI.Controllers
     public class FrogsController : ControllerBase
     {
         private readonly ILogger<FrogsController> _logger;
-        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IUnitOfWork _unitOfWork;
+        private readonly IFrogService _frogService;
 
-        public FrogsController(ILogger<FrogsController> logger, IUnitOfWork unitOfWork)
+        public FrogsController(ILogger<FrogsController> logger/*, IUnitOfWork unitOfWork*/, IFrogService frogService)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork;
+            //_unitOfWork = unitOfWork;
+            _frogService = frogService;
         }
 
         // GET: api/Frogs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Frog>>> GetFrogs()
         {
-            
-            return await _unitOfWork.Frogs.GetAllAsync(true);
+            try
+            {
+                return base.Ok(await _frogService.GetAllFrogs());
+            }
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+            //return await _unitOfWork.Frogs.GetAllAsync(true);
 
         }
 
@@ -38,19 +49,27 @@ namespace FrogExebitionAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Frog>> GetFrog(Guid id)
         {
-
-            if (await _unitOfWork.Frogs.IsEmpty())
+            try
             {
-                return base.NotFound();
+                return base.Ok(await _frogService.GetFrog(id));
             }
-            var frog = await _unitOfWork.Frogs.GetAsync(id,true);
-
-            if (frog == null)
+            catch (NotFoundException ex)
             {
-                return base.NotFound();
+                return base.NotFound(ex.Message);
             }
 
-            return base.Ok(frog);
+            //if (await _unitOfWork.Frogs.IsEmpty())
+            //{
+            //    return base.NotFound();
+            //}
+            //var frog = await _unitOfWork.Frogs.GetAsync(id,true);
+
+            //if (frog == null)
+            //{
+            //    return base.NotFound();
+            //}
+
+            //return base.Ok(frog);
         }
 
         // PUT: api/Frogs/5
@@ -58,36 +77,50 @@ namespace FrogExebitionAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFrog(Guid id, Frog frog)
         {
-
-            if (id != frog.Id)
-            {
-                return base.BadRequest();
-            }
-
-            //_context.Entry(frog).State = EntityState.Modified; ?????
-
             try
             {
-                if (!await _unitOfWork.Frogs.EntityExists(id))
-                {
-                    return base.NotFound();
-                }
-                await _unitOfWork.Frogs.UpdateAsync(frog);
-
+                //ModelState.IsValid
+                await _frogService.UpdateFrog(id, frog);
+                return base.NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (NotFoundException ex)
             {
-                if (!await _unitOfWork.Frogs.EntityExists(id))
-                {
-                    return base.NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return base.NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return base.BadRequest(ex.Message);
             }
 
-            return base.NoContent();
+            //if (id != frog.Id)
+            //{
+            //    return base.BadRequest();
+            //}
+
+            ////_context.Entry(frog).State = EntityState.Modified; ?????
+
+            //try
+            //{
+            //    if (!await _unitOfWork.Frogs.EntityExists(id))
+            //    {
+            //        return base.NotFound();
+            //    }
+            //    await _unitOfWork.Frogs.UpdateAsync(frog);
+
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!await _unitOfWork.Frogs.EntityExists(id))
+            //    {
+            //        return base.NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
+
+            //return base.NoContent();
 
         }
 
@@ -96,14 +129,31 @@ namespace FrogExebitionAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Frog>> PostFrog(Frog frog)
         {
-            //_unitOfWork.Frogs.GetAll().IsNullOrEmpty() 
-            if (await _unitOfWork.Frogs.IsEmpty())
+            try
             {
-                return base.Problem("Entity set 'ApplicationContext.Frogs'  is null.");
+                var createdFrog = await _frogService.CreateFrog(frog);
+                return base.CreatedAtAction("GetFrog", new { id = createdFrog.Id }, createdFrog);
             }
-            await _unitOfWork.Frogs.CreateAsync(frog);
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return base.BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+            ////_unitOfWork.Frogs.GetAll().IsNullOrEmpty() 
+            //if (await _unitOfWork.Frogs.IsEmpty())
+            //{
+            //    return base.Problem("Entity set 'ApplicationContext.Frogs'  is null.");
+            //}
+            //await _unitOfWork.Frogs.CreateAsync(frog);
 
-            return base.CreatedAtAction("GetFrog", new { id = frog.Id }, frog);
+            //return base.CreatedAtAction("GetFrog", new { id = frog.Id }, frog);
 
         }
 
@@ -111,21 +161,37 @@ namespace FrogExebitionAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFrog(Guid id)
         {
-
-            if (await _unitOfWork.Frogs.IsEmpty())
+            try
             {
-                return base.NotFound();
+                await _frogService.DeleteFrog(id);
+                return base.NoContent();
             }
-            var frog = await _unitOfWork.Frogs.GetAsync(id);
-
-            if (frog == null)
+            catch (NotFoundException ex)
             {
-                return base.NotFound();
+                return base.NotFound(ex.Message);
             }
+            catch (BadRequestException ex)
+            {
+                return base.BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+            //if (await _unitOfWork.Frogs.IsEmpty())
+            //{
+            //    return base.NotFound();
+            //}
+            //var frog = await _unitOfWork.Frogs.GetAsync(id);
 
-            await _unitOfWork.Frogs.DeleteAsync(frog.Id);
+            //if (frog == null)
+            //{
+            //    return base.NotFound();
+            //}
 
-            return base.NoContent();
+            //await _unitOfWork.Frogs.DeleteAsync(frog.Id);
+
+            //return base.NoContent();
 
         }
 

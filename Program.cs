@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FrogExebitionAPI.UoW;
+using FrogExebitionAPI.Swashbuckle;
 
 namespace FrogExebitionAPI
 {
@@ -29,7 +30,11 @@ namespace FrogExebitionAPI
             }).AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
 
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IFrogService, FrogService>();
+            
+
 
             builder.Services.AddAuthentication(options =>
             {
@@ -49,12 +54,20 @@ namespace FrogExebitionAPI
                 };
             }
             );
+
             builder.Services.AddTransient<IAuthService, AuthService>();
+
+
+
             builder.Services.AddControllers();
             builder.Services.AddTransient<Seed>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c => {
+                // ...
+                c.SchemaFilter<SchemaFilter>();
+            });
 
             
 
