@@ -1,13 +1,14 @@
-﻿using FrogExebitionAPI.Models;
+﻿using FrogExebitionAPI.DTO.ExebitionDTOs;
+using FrogExebitionAPI.Models;
 
 namespace FrogExebitionAPI.Interfaces
 {
     public interface IExebitionService
     {
-        Task<Exebition> CreateExebition(Exebition exebition);
+        Task<ExebitionDtoDetail> CreateExebition(ExebitionDtoForCreate exebition);
         Task DeleteExebition(Guid id);
-        Task<IEnumerable<Exebition>> GetAllExebitions();
-        Task<Exebition> GetExebition(Guid id);
-        Task UpdateExebition(Guid id, Exebition exebition);
+        Task<IEnumerable<ExebitionDtoDetail>> GetAllExebitions();
+        Task<ExebitionDtoDetail> GetExebition(Guid id);
+        Task UpdateExebition(Guid id, ExebitionDtoForCreate exebition);
     }
 }

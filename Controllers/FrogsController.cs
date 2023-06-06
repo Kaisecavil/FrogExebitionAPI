@@ -12,6 +12,7 @@ using FrogExebitionAPI.UoW;
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.DTO.FrogDTOs;
+using AutoMapper;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -30,9 +31,9 @@ namespace FrogExebitionAPI.Controllers
 
         // GET: api/Frogs
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<FrogDto>>> GetFrogs()
+        public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogs()
         {
             try
             {
@@ -47,9 +48,9 @@ namespace FrogExebitionAPI.Controllers
 
         // GET: api/Frogs/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Frog))]
+        [ProducesResponseType(200, Type = typeof(FrogDtoDetail))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Frog>> GetFrog(Guid id)
+        public async Task<ActionResult<FrogDtoDetail>> GetFrog(Guid id)
         {
             try
             {
@@ -69,7 +70,7 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> PutFrog(Guid id, Frog frog)
+        public async Task<IActionResult> PutFrog(Guid id, FrogDtoForUpdate frog)
         {
             try
             {
@@ -91,10 +92,10 @@ namespace FrogExebitionAPI.Controllers
         // POST: api/Frogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(Frog))]
+        [ProducesResponseType(201, Type = typeof(FrogDtoDetail))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Frog>> PostFrog(Frog frog)
+        public async Task<ActionResult<FrogDtoDetail>> PostFrog(FrogDtoForCreate frog)
         {
             try
             {

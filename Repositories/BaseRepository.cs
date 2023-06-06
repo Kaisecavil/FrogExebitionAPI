@@ -107,12 +107,12 @@ namespace FrogExebitionAPI.Repositories
 
         public async Task<bool> EntityExists(Guid id)
         {
-            return await _context.Frogs.AsNoTracking().AnyAsync(e => e.Id == id);
+            return await _context.Set<TDbModel>().AsNoTracking().AnyAsync(e => e.Id == id);
         }
 
         public async Task<bool> IsEmpty()
         {
-            return !await _context.Frogs.AsNoTracking().AnyAsync();
+            return !await _context.Set<TDbModel>().AsNoTracking().AnyAsync();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using FrogExebitionAPI.Exceptions;
+﻿using AutoMapper;
+using FrogExebitionAPI.DTO.FrogOnExebitionDTOs;
+using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,21 +11,23 @@ namespace FrogExebitionAPI.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<FrogOnExebitionService> _logger;
+        private readonly IMapper _mapper;
 
-        public FrogOnExebitionService(IUnitOfWork unitOfWork, ILogger<FrogOnExebitionService> logger)
+        public FrogOnExebitionService(IUnitOfWork unitOfWork, ILogger<FrogOnExebitionService> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _mapper = mapper;
         }
 
-        public async Task<FrogOnExebition> CreateFrogOnExebition(FrogOnExebition frogOnExebition)
+        public async Task<FrogOnExebitionDtoDetail> CreateFrogOnExebition(FrogOnExebitionDtoForCreate frogOnExebition)
         {
             try
             {
-                frogOnExebition.Id = new Guid(); //?? выглядит точно не как good practice
-                var createdFrogOnExebition = await _unitOfWork.FrogOnExebitions.CreateAsync(frogOnExebition);
+                var mappedFrogOnExebition = _mapper.Map<FrogOnExebition>(frogOnExebition);
+                var createdFrogOnExebition = await _unitOfWork.FrogOnExebitions.CreateAsync(mappedFrogOnExebition);
                 _logger.LogInformation("FrogOnExebition Created");
-                return createdFrogOnExebition;
+                return _mapper.Map<FrogOnExebitionDtoDetail>(createdFrogOnExebition);
             }
             catch (Exception ex)
             {
@@ -32,17 +36,17 @@ namespace FrogExebitionAPI.Services
             };
         }
 
-        public async Task<IEnumerable<FrogOnExebition>> GetAllFrogOnExebitions()
+        public async Task<IEnumerable<FrogOnExebitionDtoDetail>> GetAllFrogOnExebitions()
         {
             if (await _unitOfWork.FrogOnExebitions.IsEmpty())
             {
                 throw new NotFoundException("Entity not found due to emptines of db");
             }
-
-            return await _unitOfWork.FrogOnExebitions.GetAllAsync(true);
+            var result = await _unitOfWork.FrogOnExebitions.GetAllAsync(true);
+            return _mapper.Map<IEnumerable<FrogOnExebitionDtoDetail>>(result);
         }
 
-        public async Task<FrogOnExebition> GetFrogOnExebition(Guid id)
+        public async Task<FrogOnExebitionDtoDetail> GetFrogOnExebition(Guid id)
         {
             if (await _unitOfWork.FrogOnExebitions.IsEmpty())
             {
@@ -55,15 +59,11 @@ namespace FrogExebitionAPI.Services
                 throw new NotFoundException("Entity not found");
             }
 
-            return frogOnExebition;
+            return _mapper.Map<FrogOnExebitionDtoDetail>(frogOnExebition);
         }
 
-        public async Task UpdateFrogOnExebition(Guid id, FrogOnExebition frogOnExebition)
+        public async Task UpdateFrogOnExebition(Guid id, FrogOnExebitionDtoForCreate frogOnExebition)
         {
-            if (id != frogOnExebition.Id)
-            {
-                throw new BadRequestException("Id in request parametr is differs from id in body");
-            }
 
             try
             {
@@ -71,7 +71,9 @@ namespace FrogExebitionAPI.Services
                 {
                     throw new NotFoundException("Entity not found");
                 }
-                await _unitOfWork.FrogOnExebitions.UpdateAsync(frogOnExebition);
+                var mappedFrogOnExebition = _mapper.Map<FrogOnExebition>(frogOnExebition);
+                mappedFrogOnExebition.Id = id;
+                await _unitOfWork.FrogOnExebitions.UpdateAsync(mappedFrogOnExebition);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,6 +85,11 @@ namespace FrogExebitionAPI.Services
                 {
                     throw;
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, frogOnExebition);
+                throw;
             }
         }
 

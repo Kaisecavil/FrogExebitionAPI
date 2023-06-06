@@ -4,6 +4,8 @@ using FrogExebitionAPI.Models;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using FrogExebitionAPI.DTO.ExebitionDTOs;
+using FrogExebitionAPI.DTO.FrogDTOs;
 
 namespace ExebitionExebitionAPI.Controllers
 {
@@ -22,7 +24,9 @@ namespace ExebitionExebitionAPI.Controllers
 
         // GET: api/Exebitions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Exebition>>> GetExebitions()
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<IEnumerable<ExebitionDtoDetail>>> GetExebitions()
         {
             try
             {
@@ -37,7 +41,9 @@ namespace ExebitionExebitionAPI.Controllers
 
         // GET: api/Exebitions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Exebition>> GetExebition(Guid id)
+        [ProducesResponseType(200, Type = typeof(ExebitionDtoDetail))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ExebitionDtoDetail>> GetExebition(Guid id)
         {
             try
             {
@@ -54,7 +60,10 @@ namespace ExebitionExebitionAPI.Controllers
         // PUT: api/Exebitions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutExebition(Guid id, Exebition exebition)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> PutExebition(Guid id, ExebitionDtoForCreate exebition)
         {
             try
             {
@@ -75,7 +84,10 @@ namespace ExebitionExebitionAPI.Controllers
         // POST: api/Exebitions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Exebition>> PostExebition(Exebition exebition)
+        [ProducesResponseType(201, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ExebitionDtoDetail>> PostExebition(ExebitionDtoForCreate exebition)
         {
             try
             {
@@ -90,14 +102,12 @@ namespace ExebitionExebitionAPI.Controllers
             {
                 return base.BadRequest(ex.Message);
             }
-            //catch (DbUpdateException ex)
-            //{
-            //    return base.Ba
-            //}
         }
 
         // DELETE: api/Exebitions/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteExebition(Guid id)
         {
             try

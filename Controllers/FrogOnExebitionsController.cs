@@ -1,8 +1,9 @@
-﻿using FrogExebitionAPI.Dto;
+﻿using FrogExebitionAPI.DTO.FrogOnExebitionDTOs;
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -21,9 +22,9 @@ namespace FrogExebitionAPI.Controllers
 
         // GET: api/FrogOnExebitions
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogOnExebition>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogOnExebitionDtoDetail>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<FrogOnExebition>>> GetFrogOnExebitions()
+        public async Task<ActionResult<IEnumerable<FrogOnExebitionDtoDetail>>> GetFrogOnExebitions()
         {
             try
             {
@@ -38,9 +39,9 @@ namespace FrogExebitionAPI.Controllers
 
         // GET: api/FrogOnExebitions/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(FrogOnExebition))]
+        [ProducesResponseType(200, Type = typeof(FrogOnExebitionDtoDetail))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<FrogOnExebition>> GetFrogOnExebition(Guid id)
+        public async Task<ActionResult<FrogOnExebitionDtoDetail>> GetFrogOnExebition(Guid id)
         {
             try
             {
@@ -60,7 +61,8 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> PutFrogOnExebition(Guid id, FrogOnExebition frogOnExebition)
+        [ProducesResponseType(422)]
+        public async Task<IActionResult> PutFrogOnExebition(Guid id, FrogOnExebitionDtoForCreate frogOnExebition)
         {
             try
             {
@@ -77,28 +79,32 @@ namespace FrogExebitionAPI.Controllers
             {
                 return base.BadRequest(ex.Message);
             }
+            catch (DbUpdateException ex)
+            {
+                return base.UnprocessableEntity(ex.Message);
+            }
         }
 
         // POST: api/FrogOnExebitions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(FrogOnExebition))]
+        [ProducesResponseType(201, Type = typeof(FrogOnExebitionDtoDetail))]
         [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<FrogOnExebition>> PostFrogOnExebition(FrogOnExebition frogOnExebition)
+        [ProducesResponseType(422)]
+        public async Task<ActionResult<FrogOnExebitionDtoDetail>> PostFrogOnExebition(FrogOnExebitionDtoForCreate frogOnExebition)
         {
             try
             {
                 var createdFrogOnExebition = await _frogOnExebitionService.CreateFrogOnExebition(frogOnExebition);
                 return base.CreatedAtAction("GetFrogOnExebition", new { id = createdFrogOnExebition.Id }, createdFrogOnExebition);
             }
-            catch (NotFoundException ex)
-            {
-                return base.NotFound(ex.Message);
-            }
             catch (BadRequestException ex)
             {
                 return base.BadRequest(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                return base.UnprocessableEntity(ex.Message);
             }
         }
 

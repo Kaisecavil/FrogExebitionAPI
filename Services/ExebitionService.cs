@@ -1,4 +1,6 @@
-﻿using FrogExebitionAPI.Exceptions;
+﻿using AutoMapper;
+using FrogExebitionAPI.DTO.ExebitionDTOs;
+using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,22 +11,24 @@ namespace FrogExebitionAPI.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ExebitionService> _logger;
+        private readonly IMapper _mapper;
 
-        public ExebitionService(IUnitOfWork unitOfWork, ILogger<ExebitionService> logger)
+        public ExebitionService(IUnitOfWork unitOfWork, ILogger<ExebitionService> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _mapper = mapper;
         }
 
-        public async Task<Exebition> CreateExebition(Exebition exebition)
+        public async Task<ExebitionDtoDetail> CreateExebition(ExebitionDtoForCreate exebition)
         {
 
             try
             {
-                exebition.Id = new Guid();
-                var createdExebition = await _unitOfWork.Exebitions.CreateAsync(exebition);
+                var mappedExebition = _mapper.Map<Exebition>(exebition);
+                var createdExebition = await _unitOfWork.Exebitions.CreateAsync(mappedExebition);
                 _logger.LogInformation("Exebition Created");
-                return createdExebition;
+                return _mapper.Map<ExebitionDtoDetail>(createdExebition);
             }
             catch (Exception ex)
             {
@@ -34,17 +38,18 @@ namespace FrogExebitionAPI.Services
 
         }
 
-        public async Task<IEnumerable<Exebition>> GetAllExebitions()
+        public async Task<IEnumerable<ExebitionDtoDetail>> GetAllExebitions()
         {
             if (await _unitOfWork.Exebitions.IsEmpty())
             {
                 throw new NotFoundException("Entity not found due to emptines of db");
             }
 
-            return await _unitOfWork.Exebitions.GetAllAsync(true);
+            var result = await _unitOfWork.Exebitions.GetAllAsync(true);
+            return _mapper.Map<IEnumerable<ExebitionDtoDetail>>(result);
         }
 
-        public async Task<Exebition> GetExebition(Guid id)
+        public async Task<ExebitionDtoDetail> GetExebition(Guid id)
         {
             if (await _unitOfWork.Exebitions.IsEmpty())
             {
@@ -57,15 +62,11 @@ namespace FrogExebitionAPI.Services
                 throw new NotFoundException("Entity not found");
             }
 
-            return exebition;
+            return _mapper.Map<ExebitionDtoDetail>(exebition);
         }
 
-        public async Task UpdateExebition(Guid id, Exebition exebition)
+        public async Task UpdateExebition(Guid id, ExebitionDtoForCreate exebition)
         {
-            if (id != exebition.Id)
-            {
-                throw new BadRequestException("Id in request parametr is differs from id in body");
-            }
 
             try
             {
@@ -73,7 +74,9 @@ namespace FrogExebitionAPI.Services
                 {
                     throw new NotFoundException("Entity not found");
                 }
-                await _unitOfWork.Exebitions.UpdateAsync(exebition);
+                var mappedExebition = _mapper.Map<Exebition>(exebition);
+                mappedExebition.Id = id;
+                await _unitOfWork.Exebitions.UpdateAsync(mappedExebition);
             }
             catch (DbUpdateConcurrencyException)
             {

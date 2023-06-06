@@ -21,14 +21,14 @@ namespace FrogExebitionAPI.Services
             _mapper = mapper;
         }
 
-        public async Task<Frog> CreateFrog(Frog frog)
+        public async Task<FrogDtoDetail> CreateFrog(FrogDtoForCreate frog)
         {
             try
             {
-                frog.Id = new Guid(); //?? выглядит точно не как good practice
-                var createdFrog = await _unitOfWork.Frogs.CreateAsync(frog);
+                Frog mappedFrog = _mapper.Map<Frog>(frog);
+                Frog createdFrog = await _unitOfWork.Frogs.CreateAsync(mappedFrog);
                 _logger.LogInformation("Frog Created");
-                return createdFrog;
+                return _mapper.Map<FrogDtoDetail>(createdFrog);
             }
             catch (Exception ex)
             {
@@ -37,17 +37,17 @@ namespace FrogExebitionAPI.Services
             };
         }
 
-        public async Task<IEnumerable<FrogDetailDto>> GetAllFrogs()
+        public async Task<IEnumerable<FrogDtoGeneral>> GetAllFrogs()
         {
             if (await _unitOfWork.Frogs.IsEmpty())
             {
                 throw new NotFoundException("Entity not found due to emptines of db");
             }
-            var frogs = _mapper.Map<IEnumerable<FrogDetailDto>>(await _unitOfWork.Frogs.GetAllAsync(true));
+            var frogs = _mapper.Map<IEnumerable<FrogDtoGeneral>>(await _unitOfWork.Frogs.GetAllAsync(true));
             return frogs;
         }
 
-        public async Task<Frog> GetFrog(Guid id)
+        public async Task<FrogDtoDetail> GetFrog(Guid id)
         {
             if (await _unitOfWork.Frogs.IsEmpty())
             {
@@ -60,23 +60,20 @@ namespace FrogExebitionAPI.Services
                 throw new NotFoundException("Entity not found");
             }
 
-            return frog;
+            return _mapper.Map<FrogDtoDetail>(frog);
         }
 
-        public async Task UpdateFrog(Guid id, Frog frog)
+        public async Task UpdateFrog(Guid id, FrogDtoForUpdate frog)
         {
-            if (id != frog.Id)
-            {
-                throw new BadRequestException("Id in request parametr is differs from id in body");
-            }
-
             try
             {
                 if (!await _unitOfWork.Frogs.EntityExists(id))
                 {
                     throw new NotFoundException("Entity not found");
                 }
-                await _unitOfWork.Frogs.UpdateAsync(frog);
+                Frog mappedFrog = _mapper.Map<Frog>(frog);
+                mappedFrog.Id = id;
+                await _unitOfWork.Frogs.UpdateAsync(mappedFrog);
             }
             catch (DbUpdateConcurrencyException)
             {

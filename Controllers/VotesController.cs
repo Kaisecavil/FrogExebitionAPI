@@ -1,7 +1,9 @@
-﻿using FrogExebitionAPI.Exceptions;
+﻿using FrogExebitionAPI.DTO.VoteDtos;
+using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -20,9 +22,9 @@ namespace FrogExebitionAPI.Controllers
 
         // GET: api/Votes
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Vote>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<VoteDtoDetail>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<Vote>>> GetVotes()
+        public async Task<ActionResult<IEnumerable<VoteDtoDetail>>> GetVotes()
         {
             try
             {
@@ -37,9 +39,9 @@ namespace FrogExebitionAPI.Controllers
 
         // GET: api/Votes/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Vote))]
+        [ProducesResponseType(200, Type = typeof(VoteDtoDetail))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Vote>> GetVote(Guid id)
+        public async Task<ActionResult<VoteDtoDetail>> GetVote(Guid id)
         {
             try
             {
@@ -59,7 +61,8 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> PutVote(Guid id, Vote vote)
+        [ProducesResponseType(422)]
+        public async Task<IActionResult> PutVote(Guid id, VoteDtoForCreate vote)
         {
             try
             {
@@ -76,28 +79,32 @@ namespace FrogExebitionAPI.Controllers
             {
                 return base.BadRequest(ex.Message);
             }
+            catch (DbUpdateException ex)
+            {
+                return base.UnprocessableEntity(ex.Message);
+            }
         }
 
         // POST: api/Votes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(Vote))]
+        [ProducesResponseType(201, Type = typeof(VoteDtoDetail))]
         [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<Vote>> PostVote(Vote vote)
+        [ProducesResponseType(422)]
+        public async Task<ActionResult<VoteDtoDetail>> PostVote(VoteDtoForCreate vote)
         {
             try
             {
                 var createdVote = await _voteService.CreateVote(vote);
                 return base.CreatedAtAction("GetVote", new { id = createdVote.Id }, createdVote);
             }
-            catch (NotFoundException ex)
-            {
-                return base.NotFound(ex.Message);
-            }
             catch (BadRequestException ex)
             {
                 return base.BadRequest(ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                return base.UnprocessableEntity(ex.Message);
             }
         }
 
