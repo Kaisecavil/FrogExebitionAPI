@@ -1,6 +1,6 @@
 ﻿using FrogExebitionAPI.Models;
 
-namespace FrogExebitionAPI.Services
+namespace FrogExebitionAPI.Interfaces
 {
     public interface IAuthService
     {

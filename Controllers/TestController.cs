@@ -10,6 +10,8 @@ namespace FrogExebitionAPI.Controllers
     public class TestController : ControllerBase
     {
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(401)]
         public string Get()
         {
             return "you hit me!";

@@ -7,6 +7,10 @@ namespace FrogExebitionAPI.ValidationAttributes
     {
         public override bool IsValid(object value)
         {
+            if (value == null)
+            {
+                return true;
+            }
             Frog f = value as Frog;
             try
             {

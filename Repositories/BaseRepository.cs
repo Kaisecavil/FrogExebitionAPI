@@ -1,11 +1,10 @@
 ﻿using FrogExebitionAPI.Database;
-using FrogExebitionAPI.Models;
+using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models.Base;
-using FrogExebitionAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
-namespace FrogExebitionAPI.Repositories.Implementations
+
+namespace FrogExebitionAPI.Repositories
 {
     public class BaseRepository<TDbModel> : IBaseRepository<TDbModel> where TDbModel : BaseModel
     {
@@ -87,7 +86,7 @@ namespace FrogExebitionAPI.Repositories.Implementations
         public async Task<TDbModel> UpdateAsync(TDbModel model)
         {
             //_context.Entry(model).State = EntityState.Modified;
-            var toUpdate = await GetAsync(model.Id,true);
+            var toUpdate = await GetAsync(model.Id, true);
             if (toUpdate != null)
             {
                 toUpdate = model;
@@ -96,7 +95,7 @@ namespace FrogExebitionAPI.Repositories.Implementations
                 return toUpdate;
             }
             return null;
-            
+
         }
 
         public async Task DeleteAsync(Guid id)
@@ -113,7 +112,6 @@ namespace FrogExebitionAPI.Repositories.Implementations
 
         public async Task<bool> IsEmpty()
         {
-            //return _context.Frogs.AsNoTracking().IsNullOrEmpty();
             return !await _context.Frogs.AsNoTracking().AnyAsync();
         }
     }

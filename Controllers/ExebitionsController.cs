@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using FrogExebitionAPI.Database;
 using FrogExebitionAPI.Models;
-using Microsoft.IdentityModel.Tokens;
-using FrogExebitionAPI.UoW;
+using FrogExebitionAPI.Interfaces;
+using FrogExebitionAPI.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExebitionExebitionAPI.Controllers
 {
@@ -16,42 +11,44 @@ namespace ExebitionExebitionAPI.Controllers
     [ApiController]
     public class ExebitionsController : ControllerBase
     {
-        private readonly ApplicationContext _context;
         private readonly ILogger<ExebitionsController> _logger;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IExebitionService _exebitionService;
 
-        public ExebitionsController(ApplicationContext context, ILogger<ExebitionsController> logger, IUnitOfWork unitOfWork)
+        public ExebitionsController(ILogger<ExebitionsController> logger, IExebitionService exebitionService)
         {
-            _context = context;
             _logger = logger;
-            _unitOfWork = unitOfWork;
+            _exebitionService = exebitionService;
         }
 
         // GET: api/Exebitions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Exebition>>> GetExebitions()
         {
-            //_logger.LogInformation("Processing request!!!!!!!!!!!!!!!!");
-            return await _unitOfWork.Exebitions.GetAllAsync();
+            try
+            {
+                return base.Ok(await _exebitionService.GetAllExebitions());
+            }
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+
         }
 
         // GET: api/Exebitions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Exebition>> GetExebition(Guid id)
         {
-
-            if (_unitOfWork.Exebitions.GetAll().IsNullOrEmpty())
+            try
             {
-                return base.NotFound();
+                return base.Ok(await _exebitionService.GetExebition(id));
             }
-            var exebition = await _unitOfWork.Exebitions.GetAsync(id);
-
-            if (exebition == null)
+            catch (NotFoundException ex)
             {
-                return base.NotFound();
+                return base.NotFound(ex.Message);
             }
 
-            return exebition;
+
         }
 
         // PUT: api/Exebitions/5
@@ -59,37 +56,20 @@ namespace ExebitionExebitionAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExebition(Guid id, Exebition exebition)
         {
-
-            if (id != exebition.Id)
-            {
-                return base.BadRequest();
-            }
-
-            //_context.Entry(exebition).State = EntityState.Modified; ?????
-
             try
             {
-                if (!ExebitionExists(id))
-                {
-                    return base.NotFound();
-                }
-                await _unitOfWork.Exebitions.UpdateAsync(exebition);
-
+                //ModelState.IsValid
+                await _exebitionService.UpdateExebition(id, exebition);
+                return base.NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (NotFoundException ex)
             {
-                if (!ExebitionExists(id))
-                {
-                    return base.NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return base.NotFound(ex.Message);
             }
-
-            return base.NoContent();
-
+            catch (BadRequestException ex)
+            {
+                return base.BadRequest(ex.Message);
+            }
         }
 
         // POST: api/Exebitions
@@ -97,41 +77,38 @@ namespace ExebitionExebitionAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Exebition>> PostExebition(Exebition exebition)
         {
-
-            if (_unitOfWork.Exebitions.GetAll().IsNullOrEmpty())
+            try
             {
-                return base.Problem("Entity set 'ApplicationContext.Exebitions'  is null.");
+                var createdExebition = await _exebitionService.CreateExebition(exebition);
+                return base.CreatedAtAction("GetExebition", new { id = createdExebition.Id }, createdExebition);
             }
-            await _unitOfWork.Exebitions.CreateAsync(exebition);
-
-            return base.CreatedAtAction("GetExebition", new { id = exebition.Id }, exebition);
-
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return base.BadRequest(ex.Message);
+            }
+            //catch (DbUpdateException ex)
+            //{
+            //    return base.Ba
+            //}
         }
 
         // DELETE: api/Exebitions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExebition(Guid id)
         {
-
-            if (_unitOfWork.Exebitions.GetAll().IsNullOrEmpty())
+            try
             {
-                return base.NotFound();
+                await _exebitionService.DeleteExebition(id);
+                return base.NoContent();
             }
-            var exebition = await _unitOfWork.Exebitions.GetAsync(id);
-            if (exebition == null)
+            catch (NotFoundException ex)
             {
-                return base.NotFound();
+                return base.NotFound(ex.Message);
             }
-
-            await _unitOfWork.Exebitions.DeleteAsync(exebition.Id);
-
-            return base.NoContent();
-
-        }
-
-        private bool ExebitionExists(Guid id)
-        {
-            return _unitOfWork.Exebitions.GetAsync(id).Result != null;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using FrogExebitionAPI.Models.Base;
 
-namespace FrogExebitionAPI.Repositories.Interfaces
+namespace FrogExebitionAPI.Interfaces
 {
     public interface IBaseRepository<TDbModel> where TDbModel : BaseModel
     {

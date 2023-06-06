@@ -1,42 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FrogExebitionAPI.Database;
-using FrogExebitionAPI.Models;
-using Microsoft.IdentityModel.Tokens;
-using FrogExebitionAPI.UoW;
+﻿using FrogExebitionAPI.Dto;
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.DTO.FrogDTOs;
+using FrogExebitionAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FrogExebitionAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FrogsController : ControllerBase
+    public class FrogOnExebitionsController : ControllerBase
     {
-        private readonly ILogger<FrogsController> _logger;
-        private readonly IFrogService _frogService;
+        private readonly ILogger<FrogOnExebitionsController> _logger;
+        private readonly IFrogOnExebitionService _frogOnExebitionService;
 
-        public FrogsController(ILogger<FrogsController> logger, IFrogService frogService)
+        public FrogOnExebitionsController(ILogger<FrogOnExebitionsController> logger, IFrogOnExebitionService frogOnExebitionService)
         {
             _logger = logger;
-            _frogService = frogService;
+            _frogOnExebitionService = frogOnExebitionService;
         }
 
-        // GET: api/Frogs
+        // GET: api/FrogOnExebitions
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogOnExebition>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<FrogDto>>> GetFrogs()
+        public async Task<ActionResult<IEnumerable<FrogOnExebition>>> GetFrogOnExebitions()
         {
             try
             {
-                return base.Ok(await _frogService.GetAllFrogs());
+                return base.Ok(await _frogOnExebitionService.GetAllFrogOnExebitions());
             }
             catch (NotFoundException ex)
             {
@@ -45,37 +36,37 @@ namespace FrogExebitionAPI.Controllers
 
         }
 
-        // GET: api/Frogs/5
+        // GET: api/FrogOnExebitions/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Frog))]
+        [ProducesResponseType(200, Type = typeof(FrogOnExebition))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Frog>> GetFrog(Guid id)
+        public async Task<ActionResult<FrogOnExebition>> GetFrogOnExebition(Guid id)
         {
             try
             {
-                return base.Ok(await _frogService.GetFrog(id));
+                return base.Ok(await _frogOnExebitionService.GetFrogOnExebition(id));
             }
             catch (NotFoundException ex)
             {
                 return base.NotFound(ex.Message);
             }
 
-           
+
         }
 
-        // PUT: api/Frogs/5
+        // PUT: api/FrogOnExebitions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> PutFrog(Guid id, Frog frog)
+        public async Task<IActionResult> PutFrogOnExebition(Guid id, FrogOnExebition frogOnExebition)
         {
             try
             {
                 //ModelState.IsValid
                 //ModelState.AddModelError("")
-                await _frogService.UpdateFrog(id, frog);
+                await _frogOnExebitionService.UpdateFrogOnExebition(id, frogOnExebition);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
@@ -88,18 +79,18 @@ namespace FrogExebitionAPI.Controllers
             }
         }
 
-        // POST: api/Frogs
+        // POST: api/FrogOnExebitions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(Frog))]
+        [ProducesResponseType(201, Type = typeof(FrogOnExebition))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Frog>> PostFrog(Frog frog)
+        public async Task<ActionResult<FrogOnExebition>> PostFrogOnExebition(FrogOnExebition frogOnExebition)
         {
             try
             {
-                var createdFrog = await _frogService.CreateFrog(frog);
-                return base.CreatedAtAction("GetFrog", new { id = createdFrog.Id }, createdFrog);
+                var createdFrogOnExebition = await _frogOnExebitionService.CreateFrogOnExebition(frogOnExebition);
+                return base.CreatedAtAction("GetFrogOnExebition", new { id = createdFrogOnExebition.Id }, createdFrogOnExebition);
             }
             catch (NotFoundException ex)
             {
@@ -108,24 +99,25 @@ namespace FrogExebitionAPI.Controllers
             catch (BadRequestException ex)
             {
                 return base.BadRequest(ex.Message);
-            }      
+            }
         }
 
-        // DELETE: api/Frogs/5
+        // DELETE: api/FrogOnExebitions/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteFrog(Guid id)
+        public async Task<IActionResult> DeleteFrogOnExebition(Guid id)
         {
             try
             {
-                await _frogService.DeleteFrog(id);
+                await _frogOnExebitionService.DeleteFrogOnExebition(id);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
             {
                 return base.NotFound(ex.Message);
-            }       
+            }
         }
     }
+
 }

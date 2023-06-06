@@ -1,42 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FrogExebitionAPI.Database;
-using FrogExebitionAPI.Models;
-using Microsoft.IdentityModel.Tokens;
-using FrogExebitionAPI.UoW;
-using FrogExebitionAPI.Exceptions;
+﻿using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.DTO.FrogDTOs;
+using FrogExebitionAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FrogExebitionAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FrogsController : ControllerBase
+    public class VotesController : ControllerBase
     {
-        private readonly ILogger<FrogsController> _logger;
-        private readonly IFrogService _frogService;
+        private readonly ILogger<VotesController> _logger;
+        private readonly IVoteService _voteService;
 
-        public FrogsController(ILogger<FrogsController> logger, IFrogService frogService)
+        public VotesController(ILogger<VotesController> logger, IVoteService voteService)
         {
             _logger = logger;
-            _frogService = frogService;
+            _voteService = voteService;
         }
 
-        // GET: api/Frogs
+        // GET: api/Votes
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Vote>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<FrogDto>>> GetFrogs()
+        public async Task<ActionResult<IEnumerable<Vote>>> GetVotes()
         {
             try
             {
-                return base.Ok(await _frogService.GetAllFrogs());
+                return base.Ok(await _voteService.GetAllVotes());
             }
             catch (NotFoundException ex)
             {
@@ -45,37 +35,37 @@ namespace FrogExebitionAPI.Controllers
 
         }
 
-        // GET: api/Frogs/5
+        // GET: api/Votes/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Frog))]
+        [ProducesResponseType(200, Type = typeof(Vote))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Frog>> GetFrog(Guid id)
+        public async Task<ActionResult<Vote>> GetVote(Guid id)
         {
             try
             {
-                return base.Ok(await _frogService.GetFrog(id));
+                return base.Ok(await _voteService.GetVote(id));
             }
             catch (NotFoundException ex)
             {
                 return base.NotFound(ex.Message);
             }
 
-           
+
         }
 
-        // PUT: api/Frogs/5
+        // PUT: api/Votes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> PutFrog(Guid id, Frog frog)
+        public async Task<IActionResult> PutVote(Guid id, Vote vote)
         {
             try
             {
                 //ModelState.IsValid
                 //ModelState.AddModelError("")
-                await _frogService.UpdateFrog(id, frog);
+                await _voteService.UpdateVote(id, vote);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
@@ -88,18 +78,18 @@ namespace FrogExebitionAPI.Controllers
             }
         }
 
-        // POST: api/Frogs
+        // POST: api/Votes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(Frog))]
+        [ProducesResponseType(201, Type = typeof(Vote))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Frog>> PostFrog(Frog frog)
+        public async Task<ActionResult<Vote>> PostVote(Vote vote)
         {
             try
             {
-                var createdFrog = await _frogService.CreateFrog(frog);
-                return base.CreatedAtAction("GetFrog", new { id = createdFrog.Id }, createdFrog);
+                var createdVote = await _voteService.CreateVote(vote);
+                return base.CreatedAtAction("GetVote", new { id = createdVote.Id }, createdVote);
             }
             catch (NotFoundException ex)
             {
@@ -108,24 +98,24 @@ namespace FrogExebitionAPI.Controllers
             catch (BadRequestException ex)
             {
                 return base.BadRequest(ex.Message);
-            }      
+            }
         }
 
-        // DELETE: api/Frogs/5
+        // DELETE: api/Votes/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteFrog(Guid id)
+        public async Task<IActionResult> DeleteVote(Guid id)
         {
             try
             {
-                await _frogService.DeleteFrog(id);
+                await _voteService.DeleteVote(id);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
             {
                 return base.NotFound(ex.Message);
-            }       
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FrogExebitionAPI.Database;
+using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
-using FrogExebitionAPI.Repositories.Implementations;
-using FrogExebitionAPI.Repositories.Interfaces;
+using FrogExebitionAPI.Repositories;
 
 namespace FrogExebitionAPI.UoW
 {
@@ -46,7 +46,7 @@ namespace FrogExebitionAPI.UoW
                 return _exebitionRepository;
             }
         }
-        public IBaseRepository<FrogOnExebition> FrogsOnExebitions
+        public IBaseRepository<FrogOnExebition> FrogOnExebitions
         {
             get
             {

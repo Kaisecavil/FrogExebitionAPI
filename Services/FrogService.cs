@@ -1,7 +1,9 @@
-﻿using FrogExebitionAPI.Controllers;
+﻿using AutoMapper;
+using FrogExebitionAPI.Controllers;
+using FrogExebitionAPI.DTO.FrogDTOs;
 using FrogExebitionAPI.Exceptions;
+using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
-using FrogExebitionAPI.UoW;
 using Microsoft.EntityFrameworkCore;
 
 namespace FrogExebitionAPI.Services
@@ -10,25 +12,20 @@ namespace FrogExebitionAPI.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<FrogService> _logger;
+        private readonly IMapper _mapper;
 
-        public FrogService(IUnitOfWork unitOfWork, ILogger<FrogService> logger)
+        public FrogService(IUnitOfWork unitOfWork, ILogger<FrogService> logger, IMapper mapper)
         { 
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<Frog> CreateFrog(Frog frog)
         {
-            //_unitOfWork.Frogs.GetAll().IsNullOrEmpty() 
-
-            //if (await _unitOfWork.Frogs.IsEmpty())
-            //{
-            //    return base.Problem("Entity set 'ApplicationContext.Frogs'  is null.");
-            //}
-
-
             try
             {
+                frog.Id = new Guid(); //?? выглядит точно не как good practice
                 var createdFrog = await _unitOfWork.Frogs.CreateAsync(frog);
                 _logger.LogInformation("Frog Created");
                 return createdFrog;
@@ -38,18 +35,16 @@ namespace FrogExebitionAPI.Services
                 _logger.LogError(ex.Message,frog);
                 throw;
             };
-
-            //return base.CreatedAtAction("GetFrog", new { id = frog.Id }, frog);
         }
 
-        public async Task<IEnumerable<Frog>> GetAllFrogs()
+        public async Task<IEnumerable<FrogDetailDto>> GetAllFrogs()
         {
             if (await _unitOfWork.Frogs.IsEmpty())
             {
                 throw new NotFoundException("Entity not found due to emptines of db");
             }
-
-            return await _unitOfWork.Frogs.GetAllAsync(true);
+            var frogs = _mapper.Map<IEnumerable<FrogDetailDto>>(await _unitOfWork.Frogs.GetAllAsync(true));
+            return frogs;
         }
 
         public async Task<Frog> GetFrog(Guid id)

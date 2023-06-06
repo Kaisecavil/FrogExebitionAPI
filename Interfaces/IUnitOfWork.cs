@@ -1,13 +1,13 @@
 ﻿using FrogExebitionAPI.Models;
-using FrogExebitionAPI.Repositories.Interfaces;
+using FrogExebitionAPI.Repositories;
 
-namespace FrogExebitionAPI.UoW
+namespace FrogExebitionAPI.Interfaces
 {
     public interface IUnitOfWork
     {
         IBaseRepository<Exebition> Exebitions { get; }
         IBaseRepository<Frog> Frogs { get; }
-        IBaseRepository<FrogOnExebition> FrogsOnExebitions { get; }
+        IBaseRepository<FrogOnExebition> FrogOnExebitions { get; }
         IBaseRepository<User> Users { get; }
         IBaseRepository<Vote> Votes { get; }
 
