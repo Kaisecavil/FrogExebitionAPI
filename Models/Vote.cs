@@ -1,15 +1,17 @@
-﻿using FrogExebitionAPI.Models.Base;
+﻿using Castle.Core.Resource;
+using FrogExebitionAPI.Models.Base;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FrogExebitionAPI.Models
 {
     public class Vote : BaseModel 
     {
         [Required]
-        public Guid UserId { get; set; }
+        public string ApplicationUserId { get; set; }
         [Required]
         public Guid FrogOnExebitionId { get; set; }
-        public User User { get; set; } = null!;
+        public ApplicationUser ApplicationUser { get; set; } = null!;
         public FrogOnExebition FrogOnExebition { get; set; } = null!;
     }
 }

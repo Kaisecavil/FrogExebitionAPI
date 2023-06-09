@@ -8,7 +8,6 @@ namespace FrogExebitionAPI.UoW
     public class UnitOfWork : IDisposable, IUnitOfWork
     {
         private ApplicationContext _db;
-        private IBaseRepository<User> _userRepository;
         private IBaseRepository<Frog> _frogRepository;
         private IBaseRepository<Exebition> _exebitionRepository;
         private IBaseRepository<FrogOnExebition> _frogOnExebitionRepository;
@@ -19,15 +18,6 @@ namespace FrogExebitionAPI.UoW
             _db = db;
         }
 
-        public IBaseRepository<User> Users
-        {
-            get
-            {
-                if (_userRepository == null)
-                    _userRepository = new BaseRepository<User>(_db);
-                return _userRepository;
-            }
-        }
         public IBaseRepository<Frog> Frogs
         {
             get

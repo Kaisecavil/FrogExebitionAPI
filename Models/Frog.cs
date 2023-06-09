@@ -75,6 +75,7 @@ namespace FrogExebitionAPI.Models
 
         public List<Exebition> Exebitions { get; } = new();
         public List<FrogOnExebition> FrogsOnExebitions { get; } = new();
+        public List<FrogPhoto> FrogPhotos { get; } = new();
 
     }
 }

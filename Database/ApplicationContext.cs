@@ -6,12 +6,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace FrogExebitionAPI.Database
 {
-    public class ApplicationContext : IdentityDbContext
+    public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Frog> Frogs { get; set; }
         public DbSet<Exebition> Exebitions { get; set; }
         public DbSet<FrogOnExebition> FrogsOnExebitions { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
@@ -37,7 +36,7 @@ namespace FrogExebitionAPI.Database
 
             //User can vote for certain frog on exebition only once
             modelBuilder.Entity<Vote>()
-                .HasIndex(e => new { e.UserId, e.FrogOnExebitionId }, "UniqueUserId_FrogOnExebitionId").IsUnique(true);
+                .HasIndex(e => new { e.ApplicationUserId, e.FrogOnExebitionId }, "UniqueApplicationUserId_FrogOnExebitionId").IsUnique(true);
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Text;
 using FrogExebitionAPI.UoW;
 using FrogExebitionAPI.Swashbuckle;
 using FrogExebitionAPI.Interfaces;
+using FrogExebitionAPI.Models;
 
 namespace FrogExebitionAPI
 {
@@ -25,7 +26,7 @@ namespace FrogExebitionAPI
             builder.Services.AddDbContext<ApplicationContext>(
                 o => o.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 5;
             }).AddEntityFrameworkStores<ApplicationContext>()

@@ -3,6 +3,7 @@ using FrogExebitionAPI.DTO.VoteDtos;
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FrogExebitionAPI.Services
@@ -24,6 +25,11 @@ namespace FrogExebitionAPI.Services
         {
             try
             {
+                var userVotesOnExebitionCount = _unitOfWork.Votes.GetAll().Where(v => v.ApplicationUserId == vote.ApplicationUserId && v.FrogOnExebitionId == vote.FrogOnExebitionId).Count();
+                if (userVotesOnExebitionCount >= 3)
+                {
+                    throw new DbUpdateException("This user has cast all of his available votes on this exebiton");
+                }
                 var mappedVote = _mapper.Map<Vote>(vote);
                 var createdVote = await _unitOfWork.Votes.CreateAsync(mappedVote);
                 _logger.LogInformation("Vote Created");
@@ -32,7 +38,7 @@ namespace FrogExebitionAPI.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, vote);
-                throw;
+                throw new DbUpdateException("You can't vote for the same frog on exebition twice");
             };
         }
 
@@ -69,6 +75,11 @@ namespace FrogExebitionAPI.Services
                 if (!await _unitOfWork.Votes.EntityExists(id))
                 {
                     throw new NotFoundException("Entity not found");
+                }
+                var userVotesOnExebitionCount = _unitOfWork.Votes.GetAll().Where(v => v.ApplicationUserId == vote.ApplicationUserId && v.FrogOnExebitionId == vote.FrogOnExebitionId).Count();
+                if (userVotesOnExebitionCount >= 3)
+                {
+                    throw new DbUpdateException("This user has cast all of his available votes on this exebiton");
                 }
                 var mappedVote = _mapper.Map<Vote>(vote);
                 mappedVote.Id = id;

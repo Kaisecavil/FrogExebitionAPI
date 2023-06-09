@@ -75,24 +75,7 @@ namespace FrogExebitionAPI
                 // Add more frogs if needed
             };
 
-            var users = new List<User>
-            {
-                new User
-                {
-                    Name = "User 1",
-                    Email = "user1@example.com",
-                    Password = "password1",
-                    Vote = null
-                },
-                new User
-                {
-                    Name = "User 2",
-                    Email = "user2@example.com",
-                    Password = "password2",
-                    Vote = null
-                }
-                // Add more users if needed
-            };
+            
 
             foreach (var exhibition in exhibitions)
             {
@@ -106,11 +89,7 @@ namespace FrogExebitionAPI
                 _context.Set<Frog>().Add(frog);
             }
 
-            foreach (var user in users)
-            {
-                _context.Set<User>().Add(user);
-             
-            }
+            
 
             _context.SaveChanges();
 
