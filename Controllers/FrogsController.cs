@@ -61,7 +61,7 @@ namespace FrogExebitionAPI.Controllers
                 return base.NotFound(ex.Message);
             }
 
-           
+
         }
 
         // PUT: api/Frogs/5
@@ -109,7 +109,7 @@ namespace FrogExebitionAPI.Controllers
             catch (BadRequestException ex)
             {
                 return base.BadRequest(ex.Message);
-            }      
+            }
         }
 
         // DELETE: api/Frogs/5
@@ -126,7 +126,24 @@ namespace FrogExebitionAPI.Controllers
             catch (NotFoundException ex)
             {
                 return base.NotFound(ex.Message);
-            }       
+            }
         }
+
+        //// Get: api/Frogs/Rating
+        //[HttpGet("Rating")]
+        //[ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
+        //[ProducesResponseType(404)]
+        //public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogsRating()
+        //{
+        //    try
+        //    {
+        //        return base.Ok(await _frogService.GetFrogsRating());
+        //    }
+        //    catch (NotFoundException ex)
+        //    {
+        //        return base.NotFound(ex.Message);
+        //    }
+
+        //}
     }
 }

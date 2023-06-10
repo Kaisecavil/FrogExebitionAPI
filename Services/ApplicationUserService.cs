@@ -1,122 +1,126 @@
-﻿//using AutoMapper;
-//using FrogExebitionAPI.DTO.ApplicationUserDtos;
-//using FrogExebitionAPI.Exceptions;
-//using FrogExebitionAPI.Interfaces;
-//using FrogExebitionAPI.Models;
-//using Microsoft.AspNetCore.Identity;
-//using Microsoft.EntityFrameworkCore;
-//using System.Security.Claims;
+﻿using AutoMapper;
+using FrogExebitionAPI.DTO.ApplicatonUserDTOs;
+using FrogExebitionAPI.Exceptions;
+using FrogExebitionAPI.Interfaces;
+using FrogExebitionAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
-//namespace FrogExebitionAPI.Services
-//{
-//    public class ApplicationUserService
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly UserManager<ApplicationUser> _userManager;
-//        private readonly ILogger<ApplicationUserService> _logger;
-//        private readonly IMapper _mapper;
+namespace FrogExebitionAPI.Services
+{
+    public class ApplicationUserService : IApplicationUserService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ApplicationUserService> _logger;
+        private readonly IMapper _mapper;
 
-//        public ApplicationUserService(IUnitOfWork unitOfWork, ILogger<ApplicationUserService> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
-//        {
-//            _unitOfWork = unitOfWork;
-//            _logger = logger;
-//            _mapper = mapper;
-//            _userManager = userManager;
-//        }
+        public ApplicationUserService(IUnitOfWork unitOfWork, ILogger<ApplicationUserService> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
+        {
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+            _mapper = mapper;
+            _userManager = userManager;
+        }
 
-//        public async Task<ApplicationUserDtoDetail> CreateApplicationUser(ApplicationUserDtoForCreate applicationUser)
-//        {
-//            //try
-//            //{
-//            //    var mappedApplicationUser = _mapper.Map<ApplicationUser>(applicationUser);
-//            //    var createdApplicationUser = await _unitOfWork.ApplicationUsers.CreateAsync(mappedApplicationUser);
-//            //    _logger.LogInformation("ApplicationUser Created");
-//            //    return _mapper.Map<ApplicationUserDtoDetail>(createdApplicationUser);
-//            //}
-//            //catch (Exception ex)
-//            //{
-//            //    _logger.LogError(ex.Message, applicationUser);
-//            //    throw new DbUpdateException();
-//            //};
-//        }
+        //public async Task<ApplicationUserDtoDetail> CreateApplicationUser(ApplicationUserDtoForCreate applicationUser)
+        //{
+        //    //try
+        //    //{
+        //    //    var mappedApplicationUser = _mapper.Map<ApplicationUser>(applicationUser);
+        //    //    var createdApplicationUser = await _unitOfWork.ApplicationUsers.CreateAsync(mappedApplicationUser);
+        //    //    _logger.LogInformation("ApplicationUser Created");
+        //    //    return _mapper.Map<ApplicationUserDtoDetail>(createdApplicationUser);
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    _logger.LogError(ex.Message, applicationUser);
+        //    //    throw new DbUpdateException();
+        //    //};
+        //}
 
-//        public async Task<IEnumerable<ApplicationUserDtoDetail>> GetAllApplicationUsers()
-//        {
-//            //if (await _unitOfWork.ApplicationUsers.IsEmpty())
-//            //{
-//            //    throw new NotFoundException("Entity not found due to emptines of db");
-//            //}
-//            //var result = await _unitOfWork.ApplicationUsers.GetAllAsync(true);
-//            //return _mapper.Map<IEnumerable<ApplicationUserDtoDetail>>(result);
-//        }
+        public async Task<IEnumerable<ApplicationUserDtoDetail>> GetAllApplicationUsers()
+        {
+            if (_userManager.Users.IsNullOrEmpty())
+            {
+                throw new NotFoundException("Entity not found due to emptines of db");
+            }
+            var result = await _userManager.Users.ToListAsync();
+            return _mapper.Map<IEnumerable<ApplicationUserDtoDetail>>(result);
+        }
 
-//        public async Task<ApplicationUserDtoDetail> GetApplicationUser(Guid id)
-//        {
-//            //if (await _unitOfWork.ApplicationUsers.IsEmpty())
-//            //{
-//            //    throw new NotFoundException("Entity not found due to emptines of db");
-//            //}
-//            //var applicationUser = await _unitOfWork.ApplicationUsers.GetAsync(id, true);
+        public async Task<ApplicationUserDtoDetail> GetApplicationUser(Guid id)
+        {
+            if (_userManager.Users.IsNullOrEmpty())
+            {
+                throw new NotFoundException("Entity not found due to emptines of db");
+            }
+            var applicationUser = await _userManager.Users.Where(u => u.Id == id.ToString()).FirstOrDefaultAsync();
 
-//            //if (applicationUser == null)
-//            //{
-//            //    throw new NotFoundException("Entity not found");
-//            //}
+            if (applicationUser == null)
+            {
+                throw new NotFoundException("Entity not found");
+            }
 
-//            //return _mapper.Map<ApplicationUserDtoDetail>(applicationUser);
-//        }
+            return _mapper.Map<ApplicationUserDtoDetail>(applicationUser);
+        }
 
-//        public async Task UpdateApplicationUser(Guid id, ApplicationUserDtoForCreate applicationUser)
-//        {
-//            //try
-//            //{
-//            //    if (!await _unitOfWork.ApplicationUsers.EntityExists(id))
-//            //    {
-//            //        throw new NotFoundException("Entity not found");
-//            //    }
-//            //    var userApplicationUsersOnExebitionCount = _unitOfWork.ApplicationUsers.GetAll().Where(v => v.ApplicationUserId == applicationUser.ApplicationUserId && v.FrogOnExebitionId == applicationUser.FrogOnExebitionId).Count();
-//            //    if (userApplicationUsersOnExebitionCount >= 3)
-//            //    {
-//            //        throw new DbUpdateException("This user has cast all of his available applicationUsers on this exebiton");
-//            //    }
-//            //    var mappedApplicationUser = _mapper.Map<ApplicationUser>(applicationUser);
-//            //    mappedApplicationUser.Id = id;
-//            //    await _unitOfWork.ApplicationUsers.UpdateAsync(mappedApplicationUser);
-//            //}
-//            //catch (DbUpdateConcurrencyException)
-//            //{
-//            //    if (!await _unitOfWork.ApplicationUsers.EntityExists(id))
-//            //    {
-//            //        throw new NotFoundException("Entity not found due to possible concurrency");
-//            //    }
-//            //    else
-//            //    {
-//            //        throw;
-//            //    }
-//            //}
-//            //catch (Exception ex)
-//            //{
-//            //    _logger.LogError(ex.Message, applicationUser);
-//            //    throw;
-//            //};
-//        }
+        public async Task UpdateApplicationUser(Guid id, ApplicationUserDtoForUpdate applicationUser)
+        {
+            try
+            {
+                var user = await _userManager.Users.Where(u => u.Id == id.ToString()).FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    throw new NotFoundException("Entity not found");
+                }
+                user.PhoneNumber = applicationUser.PhoneNumber;
+                user.UserName = applicationUser.UserName;
+                user.Email = applicationUser.Email;
+                user.Photo = applicationUser.Photo;
+                var result = await _userManager.UpdateAsync(user);
+                //var mappedApplicationUser = _mapper.Map<ApplicationUser>(applicationUser);
+                //mappedApplicationUser.Id = id.ToString();
+                //var result = await _userManager.UpdateAsync(mappedApplicationUser);
+                //var err = result.Result.Errors.ToString();
+                ////await result;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _userManager.Users.AnyAsync(u => u.Id == id.ToString()))
+                {
+                    throw new NotFoundException("Entity not found due to possible concurrency");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, applicationUser);
+                throw;
+            };
+        }
 
-//        public async Task DeleteApplicationUser(Guid id)
-//        {
-//            //await _userManager.DeleteAsync(_userManager.GetUserAsync(ClaimsPrincipal))
-//            //if (await _unitOfWork.ApplicationUsers.IsEmpty())
-//            //{
-//            //    throw new NotFoundException("Entity not found due to emptines of db");
-//            //}
-//            //var applicationUser = await _unitOfWork.ApplicationUsers.GetAsync(id);
+        public async Task DeleteApplicationUser(Guid id)
+        {
 
-//            //if (applicationUser == null)
-//            //{
-//            //    throw new NotFoundException("Entity not found");
-//            //}
+            if (_userManager.Users.IsNullOrEmpty())
+            {
+                throw new NotFoundException("Entity not found due to emptines of db");
+            }
+            var applicationUser = await _userManager.Users.Where(u => u.Id == id.ToString()).FirstOrDefaultAsync();
 
-//            //await _unitOfWork.ApplicationUsers.DeleteAsync(applicationUser.Id);
-//        }
-//    }
-//}
-//}
+            if (applicationUser == null)
+            {
+                throw new NotFoundException("Entity not found");
+            }
+
+            await _userManager.DeleteAsync(applicationUser);
+        }
+    }
+}
+

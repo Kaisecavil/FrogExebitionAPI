@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FrogExebitionAPI.DTO.ApplicatonUserDTOs;
 using FrogExebitionAPI.DTO.ExebitionDTOs;
 using FrogExebitionAPI.DTO.FrogDTOs;
 using FrogExebitionAPI.DTO.FrogOnExebitionDTOs;
@@ -34,6 +35,12 @@ namespace FrogExebitionAPI.Helper
             CreateMap<VoteDtoDetail, Vote>();
             CreateMap<Vote, VoteDtoForCreate>();
             CreateMap<VoteDtoForCreate, Vote>();
+
+            CreateMap<ApplicationUser, ApplicationUserDtoDetail>();
+            CreateMap<ApplicationUserDtoDetail, ApplicationUser>();
+            CreateMap<ApplicationUser, ApplicationUserDtoForUpdate>();
+            CreateMap<ApplicationUserDtoForUpdate, ApplicationUser>();
+
         }
     }
 }

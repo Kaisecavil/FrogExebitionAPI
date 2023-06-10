@@ -11,5 +11,6 @@ namespace FrogExebitionAPI.Interfaces
         public Task<FrogDtoDetail> CreateFrog(FrogDtoForCreate frog);
         public Task DeleteFrog(Guid id);
         public Task UpdateFrog(Guid id, FrogDtoForUpdate frog);
+        //Task<IEnumerable<FrogDtoGeneral>> GetFrogsRating();
     }
 }

@@ -103,6 +103,21 @@ namespace FrogExebitionAPI.Services
 
             await _unitOfWork.Frogs.DeleteAsync(frog.Id);
         }
-       
+
+        //public async Task<IEnumerable<FrogDtoGeneral>> GetFrogsRating()
+        //{
+        //    if (await _unitOfWork.Frogs.IsEmpty())
+        //    {
+        //        throw new NotFoundException("Entity not found due to emptines of db");
+        //    }
+        //    //var frogs = _mapper.Map<IEnumerable<FrogDtoGeneral>>(await _unitOfWork.Frogs.GetAllAsync(true));
+        //    var votes = await _unitOfWork.Votes.GetAllAsync(true);
+        //    var fOnE = await _unitOfWork.FrogOnExebitions.GetAllAsync(true);
+        //    var frogs = await _unitOfWork.Frogs.GetAllAsync(true);
+        //    votes.First().FrogOnExebition.
+        //    //var res = votes.Join(fOnE,v => v.FrogOnExebitionId,f => f.Id, (v,f) => new { })
+        //    return frogs;
+        //}
+
     }
 }

@@ -11,12 +11,13 @@ using FrogExebitionAPI.UoW;
 using FrogExebitionAPI.Swashbuckle;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
+using Microsoft.OpenApi.Models;
 
 namespace FrogExebitionAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             
@@ -29,8 +30,12 @@ namespace FrogExebitionAPI
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 5;
-            }).AddEntityFrameworkStores<ApplicationContext>()
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
+
+            
 
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -38,6 +43,7 @@ namespace FrogExebitionAPI
             builder.Services.AddScoped<IExebitionService, ExebitionService>();
             builder.Services.AddScoped<IFrogOnExebitionService,FrogOnExebitionService>();
             builder.Services.AddScoped<IVoteService, VoteService>();
+            builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 
 
 
@@ -70,9 +76,32 @@ namespace FrogExebitionAPI
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c => {
+            builder.Services.AddSwaggerGen(option => {
                 // ...
-                c.SchemaFilter<SchemaFilter>();
+                option.SchemaFilter<SchemaFilter>();
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
+                    }
+                });
             });
 
             
@@ -82,12 +111,32 @@ namespace FrogExebitionAPI
             if (args.Length == 1 && args[0].ToLower() == "seeddata")
                 SeedData(app);
 
-            void SeedData(IHost app)
+            async void SeedData(IHost app)
             {
                 var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
 
                 using (var scope = scopedFactory.CreateScope())
                 {
+                    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                    var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var roles = new[] { "Admin", "User" };
+                    foreach (var role in roles)
+                    {
+                        if (!await roleManager.RoleExistsAsync(role))
+                        {
+                            await roleManager.CreateAsync(new IdentityRole(role));
+                        }
+                    }
+
+                    var adminUser = new LoginUser() { UserName = "Admin", Email = "Admin@mail.com", Password = "P@ssw0rd" };
+                    var regularUser = new LoginUser() { UserName = "User", Email = "User@mail.com", Password = "P@ssw0rd" };
+                    await authService.RegisterUser(adminUser);
+                    await authService.RegisterUser(regularUser);
+
+
+                    await userManager.AddToRoleAsync(await userManager.FindByEmailAsync(adminUser.Email), "Admin");
+                    await userManager.AddToRoleAsync(await userManager.FindByEmailAsync(regularUser.Email), "User");
                     var service = scope.ServiceProvider.GetService<Seed>();
                     service.SeedApplicationContext();
                 }
