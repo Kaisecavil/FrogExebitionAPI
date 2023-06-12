@@ -6,6 +6,8 @@ using FrogExebitionAPI.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using FrogExebitionAPI.DTO.ExebitionDTOs;
 using FrogExebitionAPI.DTO.FrogDTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace ExebitionExebitionAPI.Controllers
 {
@@ -62,7 +64,9 @@ namespace ExebitionExebitionAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutExebition(Guid id, ExebitionDtoForCreate exebition)
         {
             try
@@ -86,7 +90,9 @@ namespace ExebitionExebitionAPI.Controllers
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ExebitionDtoDetail>> PostExebition(ExebitionDtoForCreate exebition)
         {
             try
@@ -107,7 +113,9 @@ namespace ExebitionExebitionAPI.Controllers
         // DELETE: api/Exebitions/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteExebition(Guid id)
         {
             try
@@ -119,6 +127,26 @@ namespace ExebitionExebitionAPI.Controllers
             {
                 return base.NotFound(ex.Message);
             }
+        }
+
+        // GET: api/Exebitions/5
+        [HttpGet("rating/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<ActionResult<IEnumerable<FrogDtoRating>>> GetRating(Guid id)
+        {
+            try
+            {
+                return base.Ok(await _exebitionService.GetRating(id));
+            }
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+
+
         }
     }
 }

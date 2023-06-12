@@ -29,7 +29,7 @@ namespace FrogExebitionAPI.Models
         [DefaultValue("House")]
         public string House { get; set; }
 
-        public List<Frog> Frogs { get; } = new();
-        public List<FrogOnExebition> FrogsOnExebitions { get; } = new();
+        public virtual List<Frog> Frogs { get; set; } = new();
+        public virtual List<FrogOnExebition> FrogsOnExebitions { get; set; } = new();
     }
 }

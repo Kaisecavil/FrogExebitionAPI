@@ -7,7 +7,7 @@ namespace FrogExebitionAPI.Models
     {
         [Required]
         public Guid FrogId { get; set; }
-        public Frog Frog { get; set; } = null!;
+        public virtual Frog Frog { get; set; } = null!;
         [Required]
         public string Photo { get; set; }
     }

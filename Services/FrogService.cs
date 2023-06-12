@@ -13,12 +13,14 @@ namespace FrogExebitionAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<FrogService> _logger;
         private readonly IMapper _mapper;
+        private readonly ISortHelper<Frog> _sortHelper;
 
-        public FrogService(IUnitOfWork unitOfWork, ILogger<FrogService> logger, IMapper mapper)
+        public FrogService(IUnitOfWork unitOfWork, ILogger<FrogService> logger, IMapper mapper, ISortHelper<Frog> sortHelper)
         { 
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _sortHelper = sortHelper;
         }
 
         public async Task<FrogDtoDetail> CreateFrog(FrogDtoForCreate frog)
@@ -37,14 +39,15 @@ namespace FrogExebitionAPI.Services
             };
         }
 
-        public async Task<IEnumerable<FrogDtoGeneral>> GetAllFrogs()
+        public async Task<IEnumerable<FrogDtoGeneral>> GetAllFrogs(string sortParams)
         {
             if (await _unitOfWork.Frogs.IsEmpty())
             {
                 throw new NotFoundException("Entity not found due to emptines of db");
             }
-            var frogs = _mapper.Map<IEnumerable<FrogDtoGeneral>>(await _unitOfWork.Frogs.GetAllAsync(true));
-            return frogs;
+            var frogs = (await _unitOfWork.Frogs.GetAllAsync(true)).AsQueryable();
+            var sortedFrogs = _sortHelper.ApplySort(frogs, sortParams);
+            return _mapper.Map<IEnumerable<FrogDtoGeneral>>(sortedFrogs);
         }
 
         public async Task<FrogDtoDetail> GetFrog(Guid id)
@@ -103,21 +106,6 @@ namespace FrogExebitionAPI.Services
 
             await _unitOfWork.Frogs.DeleteAsync(frog.Id);
         }
-
-        //public async Task<IEnumerable<FrogDtoGeneral>> GetFrogsRating()
-        //{
-        //    if (await _unitOfWork.Frogs.IsEmpty())
-        //    {
-        //        throw new NotFoundException("Entity not found due to emptines of db");
-        //    }
-        //    //var frogs = _mapper.Map<IEnumerable<FrogDtoGeneral>>(await _unitOfWork.Frogs.GetAllAsync(true));
-        //    var votes = await _unitOfWork.Votes.GetAllAsync(true);
-        //    var fOnE = await _unitOfWork.FrogOnExebitions.GetAllAsync(true);
-        //    var frogs = await _unitOfWork.Frogs.GetAllAsync(true);
-        //    votes.First().FrogOnExebition.
-        //    //var res = votes.Join(fOnE,v => v.FrogOnExebitionId,f => f.Id, (v,f) => new { })
-        //    return frogs;
-        //}
 
     }
 }

@@ -9,7 +9,7 @@ namespace FrogExebitionAPI.Models
         public Guid ExebitionId { get; set; }
         [Required]
         public Guid FrogId { get; set; }
-        public Exebition Exebition { get; set; } = null!;
-        public Frog Frog { get; set; } = null!;
+        public virtual Exebition Exebition { get; set; } = null!;
+        public virtual Frog Frog { get; set; } = null!;
     }
 }

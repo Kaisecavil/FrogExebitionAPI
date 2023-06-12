@@ -31,7 +31,7 @@ namespace FrogExebitionAPI
             _roleManager = roleManager;
             _authService = authService;
         }
-        public async Task SeedApplicationContext()
+        public void SeedApplicationContext()
         {
             var exhibitions = new List<Exebition>
             {

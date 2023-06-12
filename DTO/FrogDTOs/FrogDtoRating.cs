@@ -1,15 +1,14 @@
-﻿using FrogExebitionAPI.AppConstants;
-using FrogExebitionAPI.Models.Base;
-using FrogExebitionAPI.ValidationAttributes;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
+﻿using FrogExebitionAPI.ValidationAttributes;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using FrogExebitionAPI.Models.Base;
+using FrogExebitionAPI.AppConstants;
 
-namespace FrogExebitionAPI.Models
+namespace FrogExebitionAPI.DTO.FrogDTOs
 {
-    [CurrentAgeFrog(ErrorMessage ="Current age can't be greater than max age")]
-    public class Frog : BaseModel
+    public class FrogDtoRating
     {
+        public Guid Id { get; set; }
         [Required]
         [MinLength(3)]
         [DefaultValue("Lithobates")]
@@ -35,7 +34,7 @@ namespace FrogExebitionAPI.Models
         public bool Poisonous { get; set; }
 
         [Required]
-        [ValidStrings(new string[] { "Male", "Female", "Hermaphrodite"}, ErrorMessage = "Valid options: Male, Female, Hermaphrodite")]
+        [ValidStrings(new string[] { "Male", "Female", "Hermaphrodite" }, ErrorMessage = "Valid options: Male, Female, Hermaphrodite")]
         [DefaultValue("Male")]
         public string Sex { get; set; }
 
@@ -61,21 +60,8 @@ namespace FrogExebitionAPI.Models
         [Range(1, Constants.MaxAge)]
         [DefaultValue(10)]
         public int MaxAge { get; set; }
-
-        [Required]
-        [MinLength(3)]
-        [DefaultValue("Bugs, insects")]
-        public string Diet { get; set; }
-
-        [Required]
-        [MinLength(3)]
-        [DefaultValue("The are so Cool loking!")]
-        public string Features { get; set; }
         public string Photo { get; set; }
-
-        public virtual List<Exebition> Exebitions { get; } = new();
-        public virtual List<FrogOnExebition> FrogsOnExebitions { get; } = new();
-        public virtual List<FrogPhoto> FrogPhotos { get; } = new();
-
+        [Required]
+        public int VotesCount { get; set; }
     }
 }

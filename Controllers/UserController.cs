@@ -1,8 +1,10 @@
 ﻿using FrogExebitionAPI.DTO.ApplicatonUserDTOs;
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -22,7 +24,9 @@ namespace FrogExebitionAPI.Controllers
         // GET: api/Users
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ApplicationUserDtoGeneral>))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ApplicationUserDtoGeneral>>> GetUsers()
         {
             try
@@ -39,7 +43,9 @@ namespace FrogExebitionAPI.Controllers
         // GET: api/Users/5
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(ApplicationUserDtoDetail))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<ApplicationUserDtoDetail>> GetUser(Guid id)
         {
             try
@@ -59,8 +65,10 @@ namespace FrogExebitionAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> PutUser(Guid id, ApplicationUserDtoForUpdate user)
         {
             try
@@ -84,33 +92,12 @@ namespace FrogExebitionAPI.Controllers
             }
         }
 
-        //// POST: api/Users
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //[ProducesResponseType(201, Type = typeof(ApplicationUserDtoDetail))]
-        //[ProducesResponseType(400)]
-        //[ProducesResponseType(422)]
-        //public async Task<ActionResult<ApplicationUserDtoDetail>> PostUser(ApplicationUserDtoForCreate user)
-        //{
-        //    try
-        //    {
-        //        var createdApplicationUser = await _userService.CreateApplicationUser(user);
-        //        return base.CreatedAtAction("GetUser", new { id = createdApplicationUser.Id }, createdApplicationUser);
-        //    }
-        //    catch (BadRequestException ex)
-        //    {
-        //        return base.BadRequest(ex.Message);
-        //    }
-        //    catch (DbUpdateException ex)
-        //    {
-        //        return base.UnprocessableEntity(ex.Message);
-        //    }
-        //}
-
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             try

@@ -2,6 +2,7 @@
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,9 @@ namespace FrogExebitionAPI.Controllers
         // GET: api/Votes
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<VoteDtoDetail>))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<VoteDtoDetail>>> GetVotes()
         {
             try
@@ -40,7 +43,9 @@ namespace FrogExebitionAPI.Controllers
         // GET: api/Votes/5
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(VoteDtoDetail))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<VoteDtoDetail>> GetVote(Guid id)
         {
             try
@@ -60,8 +65,10 @@ namespace FrogExebitionAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutVote(Guid id, VoteDtoForCreate vote)
         {
             try
@@ -90,7 +97,9 @@ namespace FrogExebitionAPI.Controllers
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(VoteDtoDetail))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(422)]
+        [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<VoteDtoDetail>> PostVote(VoteDtoForCreate vote)
         {
             try
@@ -111,7 +120,9 @@ namespace FrogExebitionAPI.Controllers
         // DELETE: api/Votes/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteVote(Guid id)
         {
             try

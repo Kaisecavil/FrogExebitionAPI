@@ -11,7 +11,7 @@ namespace FrogExebitionAPI.Models
         public string ApplicationUserId { get; set; }
         [Required]
         public Guid FrogOnExebitionId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; } = null!;
-        public FrogOnExebition FrogOnExebition { get; set; } = null!;
+        public virtual ApplicationUser ApplicationUser { get; set; } = null!;
+        public virtual FrogOnExebition FrogOnExebition { get; set; } = null!;
     }
 }

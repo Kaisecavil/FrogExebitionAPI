@@ -13,6 +13,7 @@ using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.DTO.FrogDTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -30,14 +31,30 @@ namespace FrogExebitionAPI.Controllers
         }
 
         // GET: api/Frogs
-        [HttpGet]
+        [HttpGet("{sortParams}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
         [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogs()
         {
             try
             {
-                return base.Ok(await _frogService.GetAllFrogs());
+                return base.Ok(await _frogService.GetAllFrogs(" "));
+            }
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+
+        }
+
+        [HttpGet("sort/{sortParams}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogs(string sortParams = " ")
+        {
+            try
+            {
+                return base.Ok(await _frogService.GetAllFrogs(sortParams));
             }
             catch (NotFoundException ex)
             {
@@ -70,6 +87,7 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutFrog(Guid id, FrogDtoForUpdate frog)
         {
             try
@@ -94,7 +112,9 @@ namespace FrogExebitionAPI.Controllers
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(FrogDtoDetail))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<FrogDtoDetail>> PostFrog(FrogDtoForCreate frog)
         {
             try
@@ -116,6 +136,8 @@ namespace FrogExebitionAPI.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFrog(Guid id)
         {
             try
@@ -129,21 +151,5 @@ namespace FrogExebitionAPI.Controllers
             }
         }
 
-        //// Get: api/Frogs/Rating
-        //[HttpGet("Rating")]
-        //[ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
-        //[ProducesResponseType(404)]
-        //public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogsRating()
-        //{
-        //    try
-        //    {
-        //        return base.Ok(await _frogService.GetFrogsRating());
-        //    }
-        //    catch (NotFoundException ex)
-        //    {
-        //        return base.NotFound(ex.Message);
-        //    }
-
-        //}
     }
 }

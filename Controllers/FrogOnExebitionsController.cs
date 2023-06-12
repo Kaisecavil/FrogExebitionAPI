@@ -2,8 +2,10 @@
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace FrogExebitionAPI.Controllers
 {
@@ -23,7 +25,9 @@ namespace FrogExebitionAPI.Controllers
         // GET: api/FrogOnExebitions
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<FrogOnExebitionDtoDetail>))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<FrogOnExebitionDtoDetail>>> GetFrogOnExebitions()
         {
             try
@@ -40,7 +44,10 @@ namespace FrogExebitionAPI.Controllers
         // GET: api/FrogOnExebitions/5
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(FrogOnExebitionDtoDetail))]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
+
         public async Task<ActionResult<FrogOnExebitionDtoDetail>> GetFrogOnExebition(Guid id)
         {
             try
@@ -60,8 +67,10 @@ namespace FrogExebitionAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutFrogOnExebition(Guid id, FrogOnExebitionDtoForCreate frogOnExebition)
         {
             try
@@ -90,7 +99,10 @@ namespace FrogExebitionAPI.Controllers
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(FrogOnExebitionDtoDetail))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(422)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<FrogOnExebitionDtoDetail>> PostFrogOnExebition(FrogOnExebitionDtoForCreate frogOnExebition)
         {
             try
@@ -111,7 +123,9 @@ namespace FrogExebitionAPI.Controllers
         // DELETE: api/FrogOnExebitions/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFrogOnExebition(Guid id)
         {
             try

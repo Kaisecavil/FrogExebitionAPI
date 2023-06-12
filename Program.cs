@@ -25,7 +25,8 @@ namespace FrogExebitionAPI
             
 
             builder.Services.AddDbContext<ApplicationContext>(
-                o => o.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+                o => o.UseLazyLoadingProxies()
+                    .UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -44,6 +45,8 @@ namespace FrogExebitionAPI
             builder.Services.AddScoped<IFrogOnExebitionService,FrogOnExebitionService>();
             builder.Services.AddScoped<IVoteService, VoteService>();
             builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+
+            builder.Services.AddSingleton<ISortHelper<Frog>, SortHelper<Frog>>();
 
 
 

@@ -20,6 +20,8 @@ namespace FrogExebitionAPI.Helper
             CreateMap<FrogDtoForUpdate, Frog>();
             CreateMap<Frog, FrogDtoGeneral>();
             CreateMap<FrogDtoGeneral, Frog>();
+            CreateMap<Frog, FrogDtoRating>();
+            CreateMap<FrogDtoRating, Frog>();
 
             CreateMap<Exebition, ExebitionDtoDetail>();
             CreateMap<ExebitionDtoDetail, Exebition>();
