@@ -6,9 +6,9 @@ namespace FrogExebitionAPI.Models
     public class LoginUser
     {
         [Required]
-        [DefaultValue("Test@mail.com")]
+        [DefaultValue("Admin@mail.com")]
         public string Email { get; set; }
-        [DefaultValue("Cool_User_Name")]
+        [DefaultValue("Admin")]
         public string UserName { get; set; }
         [Required]
         [DefaultValue("P@ssw0rd")]

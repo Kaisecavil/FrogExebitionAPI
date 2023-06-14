@@ -12,6 +12,7 @@ using FrogExebitionAPI.Swashbuckle;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using Microsoft.OpenApi.Models;
+using FrogExebitionAPI.DTO.ExebitionDTOs;
 
 namespace FrogExebitionAPI
 {
@@ -45,8 +46,11 @@ namespace FrogExebitionAPI
             builder.Services.AddScoped<IFrogOnExebitionService,FrogOnExebitionService>();
             builder.Services.AddScoped<IVoteService, VoteService>();
             builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+            builder.Services.AddScoped<IFrogPhotoService, FrogPhotoService>();
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
 
             builder.Services.AddSingleton<ISortHelper<Frog>, SortHelper<Frog>>();
+            builder.Services.AddSingleton<ISortHelper<ExebitionDtoDetail>, SortHelper<ExebitionDtoDetail>>();
 
 
 
@@ -156,6 +160,8 @@ namespace FrogExebitionAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStaticFiles();
 
 
             app.MapControllers();

@@ -31,14 +31,14 @@ namespace FrogExebitionAPI.Controllers
         }
 
         // GET: api/Frogs
-        [HttpGet("{sortParams}")]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
         [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogs()
         {
             try
             {
-                return base.Ok(await _frogService.GetAllFrogs(" "));
+                return base.Ok(await _frogService.GetAllFrogs());
             }
             catch (NotFoundException ex)
             {
@@ -50,7 +50,7 @@ namespace FrogExebitionAPI.Controllers
         [HttpGet("sort/{sortParams}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetFrogs(string sortParams = " ")
+        public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetSortedFrogs(string sortParams = " ")
         {
             try
             {
@@ -115,7 +115,7 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<FrogDtoDetail>> PostFrog(FrogDtoForCreate frog)
+        public async Task<ActionResult<FrogDtoDetail>> PostFrog([FromForm]FrogDtoForCreate frog)
         {
             try
             {

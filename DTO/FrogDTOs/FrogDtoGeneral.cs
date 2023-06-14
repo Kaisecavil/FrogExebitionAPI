@@ -60,6 +60,6 @@ namespace FrogExebitionAPI.DTO.FrogDTOs
         [Range(1, Constants.MaxAge)]
         [DefaultValue(10)]
         public int MaxAge { get; set; }
-        public string Photo { get; set; }
+        public List<string> PhotoPaths { get; set; }
     }
 }

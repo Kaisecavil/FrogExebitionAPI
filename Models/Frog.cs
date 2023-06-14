@@ -71,8 +71,6 @@ namespace FrogExebitionAPI.Models
         [MinLength(3)]
         [DefaultValue("The are so Cool loking!")]
         public string Features { get; set; }
-        public string Photo { get; set; }
-
         public virtual List<Exebition> Exebitions { get; } = new();
         public virtual List<FrogOnExebition> FrogsOnExebitions { get; } = new();
         public virtual List<FrogPhoto> FrogPhotos { get; } = new();

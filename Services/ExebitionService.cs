@@ -13,12 +13,16 @@ namespace FrogExebitionAPI.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ExebitionService> _logger;
         private readonly IMapper _mapper;
+        private readonly ISortHelper<ExebitionDtoDetail> _sortHelper;
+        private readonly IFrogPhotoService _frogPhotoService;
 
-        public ExebitionService(IUnitOfWork unitOfWork, ILogger<ExebitionService> logger, IMapper mapper)
+        public ExebitionService(IUnitOfWork unitOfWork, ILogger<ExebitionService> logger, IMapper mapper, ISortHelper<ExebitionDtoDetail> sortHelper, IFrogPhotoService frogPhotoService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _sortHelper = sortHelper;
+            _frogPhotoService = frogPhotoService;
         }
 
         public async Task<ExebitionDtoDetail> CreateExebition(ExebitionDtoForCreate exebition)
@@ -120,7 +124,7 @@ namespace FrogExebitionAPI.Services
             var frogsOnExebition = exebition.FrogsOnExebitions;
             var votes = await _unitOfWork.Votes.GetAllAsync();
             var nesVotes = votes.Join(frogsOnExebition, v => v.FrogOnExebitionId, f => f.Id, (v, f) => new { FrogOnExebition = f, Vote = v });
-            var group = nesVotes.GroupBy(o => o.FrogOnExebition.FrogId).Select(o =>(new {key = o.Key, Count = o.Count()}));
+            var group = nesVotes.GroupBy(o => o.FrogOnExebition.FrogId).Select(o => (new { key = o.Key, Count = o.Count() }));
             var order = group.OrderBy(o => o.Count).Reverse();
             var res = from o in order
                       let obj = _unitOfWork.Frogs.Get(o.key) // ne async????
@@ -132,7 +136,7 @@ namespace FrogExebitionAPI.Services
                           HouseKeepable = obj.HouseKeepable,
                           CurrentAge = obj.CurrentAge,
                           MaxAge = obj.MaxAge,
-                          Photo = obj.Photo,
+                          PhotoPaths = _frogPhotoService.GetFrogPhotoPaths(obj.Id).ToList(),
                           Genus = obj.Genus,
                           Habitat = obj.Habitat,
                           Weight = obj.Weight,
@@ -142,9 +146,17 @@ namespace FrogExebitionAPI.Services
                           Species = obj.Species
                       };
             return res.ToList();
-            //var res = order.Select(o => new { frog = _unitOfWork.Frogs.GetAsync(o.key), votesCount = o.Count });
-            //var res = order.Select(async o => _mapper.Map<FrogDtoRating>(await _unitOfWork.Frogs.GetAsync(o.key)).VotesCount = o.Count).ToList();
+        }
 
+        public async Task<IEnumerable<ExebitionDtoDetail>> GetAllExebitions(string sortParams)
+        {
+            if (await _unitOfWork.Exebitions.IsEmpty())
+            {
+                throw new NotFoundException("Entity not found due to emptines of db");
+            }
+            var exebitions = (_mapper.Map<IEnumerable<ExebitionDtoDetail>>(await _unitOfWork.Exebitions.GetAllAsync(true))).AsQueryable();
+            var sortedExebitions = _sortHelper.ApplySort(exebitions, sortParams);
+            return sortedExebitions.ToList();
         }
     }
 }

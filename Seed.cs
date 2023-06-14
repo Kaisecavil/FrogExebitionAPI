@@ -72,8 +72,7 @@ namespace FrogExebitionAPI
                     CurrentAge = 3,
                     MaxAge = 12,
                     Features = "Features 1",
-                    Diet = "Diet 1",
-                    Photo = "Photo 1"
+                    Diet = "Diet 1"
                 },
                 new Frog
                 {
@@ -89,8 +88,7 @@ namespace FrogExebitionAPI
                     CurrentAge = 2,
                     MaxAge = 10,
                     Features = "Features 2",
-                    Diet = "Diet 2",
-                    Photo = "Photo 2"
+                    Diet = "Diet 2"
                 },
                 new Frog
                 {
@@ -106,8 +104,7 @@ namespace FrogExebitionAPI
                     CurrentAge = 2,
                     MaxAge = 10,
                     Features = "Features 3",
-                    Diet = "Diet 3",
-                    Photo = "Photo 3"
+                    Diet = "Diet 3"
                 },
                 new Frog
                 {
@@ -123,8 +120,7 @@ namespace FrogExebitionAPI
                     CurrentAge = 2,
                     MaxAge = 10,
                     Features = "Features 4",
-                    Diet = "Diet 4",
-                    Photo = "Photo 4"
+                    Diet = "Diet 4"
                 }
                 // Add more frogs if needed
             };

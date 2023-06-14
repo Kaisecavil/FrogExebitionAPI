@@ -8,6 +8,7 @@ using FrogExebitionAPI.DTO.ExebitionDTOs;
 using FrogExebitionAPI.DTO.FrogDTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using FrogExebitionAPI.Services;
 
 namespace ExebitionExebitionAPI.Controllers
 {
@@ -33,6 +34,22 @@ namespace ExebitionExebitionAPI.Controllers
             try
             {
                 return base.Ok(await _exebitionService.GetAllExebitions());
+            }
+            catch (NotFoundException ex)
+            {
+                return base.NotFound(ex.Message);
+            }
+
+        }
+
+        [HttpGet("sort/{sortParams}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<IEnumerable<ExebitionDtoDetail>>> GetSortedExebitions(string sortParams = " ")
+        {
+            try
+            {
+                return base.Ok(await _exebitionService.GetAllExebitions(sortParams));
             }
             catch (NotFoundException ex)
             {

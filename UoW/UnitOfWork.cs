@@ -12,6 +12,7 @@ namespace FrogExebitionAPI.UoW
         private IBaseRepository<Exebition> _exebitionRepository;
         private IBaseRepository<FrogOnExebition> _frogOnExebitionRepository;
         private IBaseRepository<Vote> _voteRepository;
+        private IBaseRepository<FrogPhoto> _frogPhotoRepository;
 
         public UnitOfWork(ApplicationContext db)
         {
@@ -52,6 +53,15 @@ namespace FrogExebitionAPI.UoW
                 if (_voteRepository == null)
                     _voteRepository = new BaseRepository<Vote>(_db);
                 return _voteRepository;
+            }
+        }
+        public IBaseRepository<FrogPhoto> FrogPhotos
+        {
+            get
+            {
+                if (_frogPhotoRepository == null)
+                    _frogPhotoRepository = new BaseRepository<FrogPhoto>(_db);
+                return _frogPhotoRepository;
             }
         }
 
