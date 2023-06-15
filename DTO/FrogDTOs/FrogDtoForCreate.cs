@@ -61,6 +61,6 @@ namespace FrogExebitionAPI.DTO.FrogDTOs
         public int MaxAge { get; set; }
         public string Diet { get; set; }
         public string Features { get; set; }
-        public IFormFile Photo { get; set; }
+        public List<IFormFile> Photos { get; set; }
     }
 }

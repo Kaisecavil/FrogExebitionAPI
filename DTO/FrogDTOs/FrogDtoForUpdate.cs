@@ -9,6 +9,8 @@ namespace FrogExebitionAPI.DTO.FrogDTOs
     public class FrogDtoForUpdate
     {
         [Required]
+        public Guid Id { get; set; }
+        [Required]
         [MinLength(3)]
         [DefaultValue("Lithobates")]
         public string Genus { get; set; }
@@ -61,6 +63,6 @@ namespace FrogExebitionAPI.DTO.FrogDTOs
         public int MaxAge { get; set; }
         public string Diet { get; set; }
         public string Features { get; set; }
-        public string Photo { get; set; }
+        public List<IFormFile> Photos { get; set; }
     }
 }

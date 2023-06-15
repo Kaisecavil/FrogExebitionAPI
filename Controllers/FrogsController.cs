@@ -83,18 +83,19 @@ namespace FrogExebitionAPI.Controllers
 
         // PUT: api/Frogs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
+        [HttpPut]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutFrog(Guid id, FrogDtoForUpdate frog)
+        public async Task<IActionResult> PutFrog(/*Guid id,*/ [FromForm]FrogDtoForUpdate frog) // накостылял? но работает , но вопрос норм ли это для апи?
         {
             try
             {
                 //ModelState.IsValid
                 //ModelState.AddModelError("")
-                await _frogService.UpdateFrog(id, frog);
+                await _frogService.UpdateFrog(/*id,*/ frog);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
