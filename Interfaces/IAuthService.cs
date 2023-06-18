@@ -4,7 +4,7 @@ namespace FrogExebitionAPI.Interfaces
 {
     public interface IAuthService
     {
-        string GenerateTokenString(LoginUser user);
+        string GenerateTokenString(LoginUser user, IEnumerable<string> roles);
         Task<bool> Login(LoginUser user);
         Task<bool> RegisterUser(LoginUser user);
     }

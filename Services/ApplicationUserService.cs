@@ -16,30 +16,16 @@ namespace FrogExebitionAPI.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ApplicationUserService> _logger;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public ApplicationUserService(IUnitOfWork unitOfWork, ILogger<ApplicationUserService> logger, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public ApplicationUserService(IUnitOfWork unitOfWork, ILogger<ApplicationUserService> logger, IMapper mapper, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContext)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
+            _httpContext = httpContext;
         }
-
-        //public async Task<ApplicationUserDtoDetail> CreateApplicationUser(ApplicationUserDtoForCreate applicationUser)
-        //{
-        //    //try
-        //    //{
-        //    //    var mappedApplicationUser = _mapper.Map<ApplicationUser>(applicationUser);
-        //    //    var createdApplicationUser = await _unitOfWork.ApplicationUsers.CreateAsync(mappedApplicationUser);
-        //    //    _logger.LogInformation("ApplicationUser Created");
-        //    //    return _mapper.Map<ApplicationUserDtoDetail>(createdApplicationUser);
-        //    //}
-        //    //catch (Exception ex)
-        //    //{
-        //    //    _logger.LogError(ex.Message, applicationUser);
-        //    //    throw new DbUpdateException();
-        //    //};
-        //}
 
         public async Task<IEnumerable<ApplicationUserDtoDetail>> GetAllApplicationUsers()
         {
@@ -79,13 +65,7 @@ namespace FrogExebitionAPI.Services
                 user.PhoneNumber = applicationUser.PhoneNumber;
                 user.UserName = applicationUser.UserName;
                 user.Email = applicationUser.Email;
-                user.Photo = applicationUser.Photo;
                 var result = await _userManager.UpdateAsync(user);
-                //var mappedApplicationUser = _mapper.Map<ApplicationUser>(applicationUser);
-                //mappedApplicationUser.Id = id.ToString();
-                //var result = await _userManager.UpdateAsync(mappedApplicationUser);
-                //var err = result.Result.Errors.ToString();
-                ////await result;
             }
             catch (DbUpdateConcurrencyException)
             {

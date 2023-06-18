@@ -50,7 +50,7 @@ namespace FrogExebitionAPI.Controllers
         [HttpGet("sort/{sortParams}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<FrogDtoGeneral>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetSortedFrogs(string sortParams = " ")
+        public async Task<ActionResult<IEnumerable<FrogDtoGeneral>>> GetSortedFrogs(string sortParams = "sex,genus desc")
         {
             try
             {

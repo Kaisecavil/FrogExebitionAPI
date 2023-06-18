@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FrogExebitionAPI.Database;
+using FrogExebitionAPI.DTO.VoteDtos;
 using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using FrogExebitionAPI.Services;
@@ -9,29 +10,30 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 
-
 namespace FrogExebitionAPI
 {
     public class Seed
     {
         private readonly ApplicationContext _context;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IVoteService _voteService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IAuthService _authService;
         private readonly ILogger<Seed> _logger;
         private readonly IMapper _mapper;
-        public Seed(ApplicationContext context, IUnitOfWork unitOfWork, ILogger<Seed> logger, IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IAuthService authService)
+        public Seed(ApplicationContext context, IUnitOfWork unitOfWork,IVoteService voteService, ILogger<Seed> logger, IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IAuthService authService)
         {
             _context = context;
             _unitOfWork = unitOfWork;
+            _voteService = voteService;
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
             _authService = authService;
         }
-        public void SeedApplicationContext()
+        public async Task SeedApplicationContextAsync()
         {
             var exhibitions = new List<Exebition>
             {
@@ -39,19 +41,19 @@ namespace FrogExebitionAPI
                 {
                     Name = "Exhibition of Beautifull frogs",
                     Date = DateTime.Now.AddDays(7),
-                    Country = "Country 1",
-                    City = "City 1",
-                    Street = "Street 1",
-                    House = "House 1"
+                    Country = "Gernamy",
+                    City = "Berlin",
+                    Street = "Kharnchahte 34",
+                    House = "17/b"
                 },
                 new Exebition
                 {
                     Name = "FrogFEST",
                     Date = DateTime.Now.AddDays(14),
-                    Country = "Country 2",
-                    City = "City 2",
-                    Street = "Street 2",
-                    House = "House 2"
+                    Country = "Poland",
+                    City = "Krakov",
+                    Street = "Pervolino 21",
+                    House = "19"
                 }
             // Add more exhibitions if needed
             };
@@ -61,9 +63,9 @@ namespace FrogExebitionAPI
                 new Frog
                 {
                     Genus = "Red Frog",
-                    Species = "Species 1",
+                    Species = "Bull-frog",
                     Color = "Red",
-                    Habitat = "Habitat 1",
+                    Habitat = "North America",
                     Poisonous = false,
                     Sex = "Male",
                     HouseKeepable = true,
@@ -71,15 +73,15 @@ namespace FrogExebitionAPI
                     Weight = 10.0f,
                     CurrentAge = 3,
                     MaxAge = 12,
-                    Features = "Features 1",
-                    Diet = "Diet 1"
+                    Features = "Bulls everyone around",
+                    Diet = "Insects"
                 },
                 new Frog
                 {
                     Genus = "Green Frog",
-                    Species = "Species 2",
+                    Species = "Jumping frog",
                     Color = "Green",
-                    Habitat = "Habitat 2",
+                    Habitat = "Asia",
                     Poisonous = true,
                     Sex = "Female",
                     HouseKeepable = false,
@@ -87,15 +89,15 @@ namespace FrogExebitionAPI
                     Weight = 8.0f,
                     CurrentAge = 2,
                     MaxAge = 10,
-                    Features = "Features 2",
-                    Diet = "Diet 2"
+                    Features = "Can do triple backflip",
+                    Diet = "flies"
                 },
                 new Frog
                 {
                     Genus = "Purple Frog",
-                    Species = "Species 3",
+                    Species = "Programmer frog",
                     Color = "Purple",
-                    Habitat = "Habitat 3",
+                    Habitat = "Dark offices",
                     Poisonous = false,
                     Sex = "Female",
                     HouseKeepable = false,
@@ -103,15 +105,15 @@ namespace FrogExebitionAPI
                     Weight = 8.0f,
                     CurrentAge = 2,
                     MaxAge = 10,
-                    Features = "Features 3",
-                    Diet = "Diet 3"
+                    Features = "She is capable of anything",
+                    Diet = "Code bugs"
                 },
                 new Frog
                 {
                     Genus = "Yellow Frog",
-                    Species = "Species 4",
+                    Species = "Toxic frog",
                     Color = "Yellow",
-                    Habitat = "Habitat 4",
+                    Habitat = "Africa",
                     Poisonous = true,
                     Sex = "Hermaphrodite",
                     HouseKeepable = false,
@@ -119,8 +121,8 @@ namespace FrogExebitionAPI
                     Weight = 8.0f,
                     CurrentAge = 2,
                     MaxAge = 10,
-                    Features = "Features 4",
-                    Diet = "Diet 4"
+                    Features = "Peolpe say biological weapon isn't toxic as he/she is",
+                    Diet = "Your suffering"
                 }
                 // Add more frogs if needed
             };
@@ -129,17 +131,15 @@ namespace FrogExebitionAPI
 
             foreach (var exhibition in exhibitions)
             {
-                exhibition.Frogs.AddRange(frogs);
-                _context.Set<Exebition>().Add(exhibition);
+                _unitOfWork.Exebitions.Create(exhibition);
             }
 
             foreach (var frog in frogs)
             {
-                frog.Exebitions.AddRange(exhibitions);
-                _context.Set<Frog>().Add(frog);
+                _unitOfWork.Frogs.Create(frog);
             }
 
-            _context.SaveChanges();
+            _unitOfWork.Save();
 
             var exe = _unitOfWork.Exebitions.GetAll();
             var frgs = _unitOfWork.Frogs.GetAll();
@@ -152,27 +152,22 @@ namespace FrogExebitionAPI
                         FrogId = frog.Id,
                         ExebitionId = exhibition.Id
                     };
-                    _unitOfWork.FrogOnExebitions.Create(temp);
+                    
+                    try
+                    {
+                        _unitOfWork.FrogOnExebitions.Create(temp);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Db update exception");
+                        continue;
+                    }
                 }
             }
 
-            //var roles = new[] { "Admin", "User" };
-            //foreach (var role in roles)
-            //{
-            //    if (!await _roleManager.RoleExistsAsync(role))
-            //    {
-            //        await _roleManager.CreateAsync(new IdentityRole(role));
-            //    }
-            //}
+            _unitOfWork.Save();
 
-            //var adminUser = new LoginUser() { UserName = "Admin", Email = "Admin@mail.com", Password = "P@ssw0rd" };
-            //var regularUser = new LoginUser() { UserName = "User", Email = "User@mail.com", Password = "P@ssw0rd" };
-            //await _authService.RegisterUser(adminUser);
-            //await _authService.RegisterUser(regularUser);
-
-            
-            //await _userManager.AddToRoleAsync(await _userManager.FindByEmailAsync(adminUser.Email), "Admin");
-            //await _userManager.AddToRoleAsync(await _userManager.FindByEmailAsync(regularUser.Email), "User");
+           
         }
     }
 }

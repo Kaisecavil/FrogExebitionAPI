@@ -8,8 +8,6 @@ namespace FrogExebitionAPI.Models
         [Required]
         [DefaultValue("Admin@mail.com")]
         public string Email { get; set; }
-        [DefaultValue("Admin")]
-        public string UserName { get; set; }
         [Required]
         [DefaultValue("P@ssw0rd")]
         public string Password { get; set; }

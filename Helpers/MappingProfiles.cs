@@ -6,7 +6,7 @@ using FrogExebitionAPI.DTO.FrogOnExebitionDTOs;
 using FrogExebitionAPI.DTO.VoteDtos;
 using FrogExebitionAPI.Models;
 
-namespace FrogExebitionAPI.Helper
+namespace FrogExebitionAPI.Helpers
 {
     public class MappingProfiles : Profile
     {

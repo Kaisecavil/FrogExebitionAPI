@@ -1,4 +1,4 @@
-﻿using FrogExebitionAPI.Helper;
+﻿using FrogExebitionAPI.Helpers;
 using FrogExebitionAPI.Interfaces;
 using System;
 

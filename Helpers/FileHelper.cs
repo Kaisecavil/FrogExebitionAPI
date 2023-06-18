@@ -1,4 +1,4 @@
-﻿namespace FrogExebitionAPI.Helper
+﻿namespace FrogExebitionAPI.Helpers
 {
     public static class FileHelper
     {

@@ -13,6 +13,8 @@ using FrogExebitionAPI.Interfaces;
 using FrogExebitionAPI.Models;
 using Microsoft.OpenApi.Models;
 using FrogExebitionAPI.DTO.ExebitionDTOs;
+using FrogExebitionAPI.Helpers;
+using FrogExebitionAPI.DTO.VoteDtos;
 
 namespace FrogExebitionAPI
 {
@@ -48,6 +50,7 @@ namespace FrogExebitionAPI
             builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
             builder.Services.AddScoped<IFrogPhotoService, FrogPhotoService>();
             builder.Services.AddScoped<IPhotoService, PhotoService>();
+            builder.Services.AddScoped<IUserProvider, UserProvider>();
 
             builder.Services.AddSingleton<ISortHelper<Frog>, SortHelper<Frog>>();
             builder.Services.AddSingleton<ISortHelper<ExebitionDtoDetail>, SortHelper<ExebitionDtoDetail>>();
@@ -126,6 +129,8 @@ namespace FrogExebitionAPI
                 {
                     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                     var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+                    var voteService = scope.ServiceProvider.GetRequiredService<IVoteService>();
+                    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                     var roles = new[] { "Admin", "User" };
                     foreach (var role in roles)
@@ -136,8 +141,8 @@ namespace FrogExebitionAPI
                         }
                     }
 
-                    var adminUser = new LoginUser() { UserName = "Admin", Email = "Admin@mail.com", Password = "P@ssw0rd" };
-                    var regularUser = new LoginUser() { UserName = "User", Email = "User@mail.com", Password = "P@ssw0rd" };
+                    var adminUser = new LoginUser() { Email = "Admin@mail.com", Password = "P@ssw0rd" };
+                    var regularUser = new LoginUser() { Email = "User@mail.com", Password = "P@ssw0rd" };
                     await authService.RegisterUser(adminUser);
                     await authService.RegisterUser(regularUser);
 
@@ -145,7 +150,34 @@ namespace FrogExebitionAPI
                     await userManager.AddToRoleAsync(await userManager.FindByEmailAsync(adminUser.Email), "Admin");
                     await userManager.AddToRoleAsync(await userManager.FindByEmailAsync(regularUser.Email), "User");
                     var service = scope.ServiceProvider.GetService<Seed>();
-                    service.SeedApplicationContext();
+                    service.SeedApplicationContextAsync();
+
+                    var frogsOnExebitions = unitOfWork.FrogOnExebitions.GetAll();
+                    var users = userManager.Users.ToList();
+                    foreach (var user in users)
+                    {
+                        var voteCount = 0;
+                        foreach (var frogOnExebition in frogsOnExebitions)
+                        { 
+                            if (voteCount<3)
+                            {
+                                var temp = new VoteDtoForCreate()
+                                {
+                                    ApplicationUserId = user.Id,
+                                    FrogOnExebitionId = frogOnExebition.Id
+                                };
+                                try
+                                {
+                                    await voteService.CreateVote(temp);
+                                    voteCount++;
+                                }
+                                catch (Exception)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

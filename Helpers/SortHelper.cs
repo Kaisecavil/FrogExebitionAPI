@@ -3,7 +3,7 @@ using System.Text;
 using FrogExebitionAPI.Interfaces;
 using System.Linq.Dynamic.Core;
 
-namespace FrogExebitionAPI
+namespace FrogExebitionAPI.Helpers
 {
     public class SortHelper<T> : ISortHelper<T>
     {

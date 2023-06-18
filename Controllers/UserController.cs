@@ -1,32 +1,40 @@
 ﻿using FrogExebitionAPI.DTO.ApplicatonUserDTOs;
 using FrogExebitionAPI.Exceptions;
 using FrogExebitionAPI.Interfaces;
+using FrogExebitionAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Security.Claims;
 
 namespace FrogExebitionAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
         private readonly IApplicationUserService _userService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserProvider _userProvider;
 
-        public UsersController(ILogger<UsersController> logger, IApplicationUserService userService)
+        public UsersController(ILogger<UsersController> logger, IApplicationUserService userService, UserManager<ApplicationUser> userManager, IUserProvider userProvider)
         {
             _logger = logger;
             _userService = userService;
+            _userManager = userManager;
+            _userProvider = userProvider;
         }
 
         // GET: api/Users
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ApplicationUserDtoGeneral>))]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ApplicationUserDtoGeneral>>> GetUsers()
         {
             try
@@ -73,10 +81,20 @@ namespace FrogExebitionAPI.Controllers
         {
             try
             {
-                //ModelState.IsValid
-                //ModelState.AddModelError("")
-                await _userService.UpdateApplicationUser(id, user);
-                return base.NoContent();
+                var currentUserEmail = _userProvider.GetUserEmail();
+                var currentUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser.Id == id.ToString() || await _userManager.IsInRoleAsync(currentUser,"Admin"))
+                {
+                    //ModelState.IsValid
+                    //ModelState.AddModelError("")
+                    await _userService.UpdateApplicationUser(id, user);
+                    return base.NoContent();
+                }
+                else
+                {
+                    return base.Unauthorized("Access denied");
+                }
+                
             }
             catch (NotFoundException ex)
             {
@@ -90,6 +108,7 @@ namespace FrogExebitionAPI.Controllers
             {
                 return base.UnprocessableEntity(ex.Message);
             }
+
         }
 
         // DELETE: api/Users/5
@@ -97,13 +116,23 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             try
             {
-                await _userService.DeleteApplicationUser(id);
-                return base.NoContent();
+                var currentUserEmail = _userProvider.GetUserEmail();
+                var currentUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                if (currentUser.Id == id.ToString() || await _userManager.IsInRoleAsync(currentUser, "Admin"))
+                {
+                    await _userService.DeleteApplicationUser(id);
+                    return base.NoContent();
+                }
+                else
+                {
+                    return base.Unauthorized("Access denied");
+                }
+
             }
             catch (NotFoundException ex)
             {
