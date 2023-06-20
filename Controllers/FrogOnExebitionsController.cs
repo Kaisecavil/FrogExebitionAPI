@@ -1,38 +1,35 @@
-﻿using FrogExebitionAPI.DTO.FrogOnExebitionDTOs;
-using FrogExebitionAPI.Exceptions;
-using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.Models;
+﻿using FrogExhibitionPL.DTO.FrogOnExhibitionDTOs;
+using FrogExhibitionPL.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
-namespace FrogExebitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FrogOnExebitionsController : ControllerBase
+    public class FrogOnExhibitionsController : ControllerBase
     {
-        private readonly ILogger<FrogOnExebitionsController> _logger;
-        private readonly IFrogOnExebitionService _frogOnExebitionService;
+        private readonly ILogger<FrogOnExhibitionsController> _logger;
+        private readonly IFrogOnExhibitionService _frogOnExhibitionService;
 
-        public FrogOnExebitionsController(ILogger<FrogOnExebitionsController> logger, IFrogOnExebitionService frogOnExebitionService)
+        public FrogOnExhibitionsController(ILogger<FrogOnExhibitionsController> logger, IFrogOnExhibitionService frogOnExhibitionService)
         {
             _logger = logger;
-            _frogOnExebitionService = frogOnExebitionService;
+            _frogOnExhibitionService = frogOnExhibitionService;
         }
 
-        // GET: api/FrogOnExebitions
+        // GET: api/FrogOnExhibitions
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogOnExebitionDtoDetail>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<FrogOnExhibitionDtoDetail>))]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<FrogOnExebitionDtoDetail>>> GetFrogOnExebitions()
+        public async Task<ActionResult<IEnumerable<FrogOnExhibitionDtoDetail>>> GetFrogOnExhibitions()
         {
             try
             {
-                return base.Ok(await _frogOnExebitionService.GetAllFrogOnExebitions());
+                return base.Ok(await _frogOnExhibitionService.GetAllFrogOnExhibitions());
             }
             catch (NotFoundException ex)
             {
@@ -41,18 +38,18 @@ namespace FrogExebitionAPI.Controllers
 
         }
 
-        // GET: api/FrogOnExebitions/5
+        // GET: api/FrogOnExhibitions/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(FrogOnExebitionDtoDetail))]
+        [ProducesResponseType(200, Type = typeof(FrogOnExhibitionDtoDetail))]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
 
-        public async Task<ActionResult<FrogOnExebitionDtoDetail>> GetFrogOnExebition(Guid id)
+        public async Task<ActionResult<FrogOnExhibitionDtoDetail>> GetFrogOnExhibition(Guid id)
         {
             try
             {
-                return base.Ok(await _frogOnExebitionService.GetFrogOnExebition(id));
+                return base.Ok(await _frogOnExhibitionService.GetFrogOnExhibition(id));
             }
             catch (NotFoundException ex)
             {
@@ -62,7 +59,7 @@ namespace FrogExebitionAPI.Controllers
 
         }
 
-        // PUT: api/FrogOnExebitions/5
+        // PUT: api/FrogOnExhibitions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
@@ -71,13 +68,13 @@ namespace FrogExebitionAPI.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutFrogOnExebition(Guid id, FrogOnExebitionDtoForCreate frogOnExebition)
+        public async Task<IActionResult> PutFrogOnExhibition(Guid id, FrogOnExhibitionDtoForCreate frogOnExhibition)
         {
             try
             {
                 //ModelState.IsValid
                 //ModelState.AddModelError("")
-                await _frogOnExebitionService.UpdateFrogOnExebition(id, frogOnExebition);
+                await _frogOnExhibitionService.UpdateFrogOnExhibition(id, frogOnExhibition);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
@@ -94,21 +91,21 @@ namespace FrogExebitionAPI.Controllers
             }
         }
 
-        // POST: api/FrogOnExebitions
+        // POST: api/FrogOnExhibitions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(FrogOnExebitionDtoDetail))]
+        [ProducesResponseType(201, Type = typeof(FrogOnExhibitionDtoDetail))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<FrogOnExebitionDtoDetail>> PostFrogOnExebition(FrogOnExebitionDtoForCreate frogOnExebition)
+        public async Task<ActionResult<FrogOnExhibitionDtoDetail>> PostFrogOnExhibition(FrogOnExhibitionDtoForCreate frogOnExhibition)
         {
             try
             {
-                var createdFrogOnExebition = await _frogOnExebitionService.CreateFrogOnExebition(frogOnExebition);
-                return base.CreatedAtAction("GetFrogOnExebition", new { id = createdFrogOnExebition.Id }, createdFrogOnExebition);
+                var createdFrogOnExhibition = await _frogOnExhibitionService.CreateFrogOnExhibition(frogOnExhibition);
+                return base.CreatedAtAction("GetFrogOnExhibition", new { id = createdFrogOnExhibition.Id }, createdFrogOnExhibition);
             }
             catch (BadRequestException ex)
             {
@@ -120,17 +117,17 @@ namespace FrogExebitionAPI.Controllers
             }
         }
 
-        // DELETE: api/FrogOnExebitions/5
+        // DELETE: api/FrogOnExhibitions/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteFrogOnExebition(Guid id)
+        public async Task<IActionResult> DeleteFrogOnExhibition(Guid id)
         {
             try
             {
-                await _frogOnExebitionService.DeleteFrogOnExebition(id);
+                await _frogOnExhibitionService.DeleteFrogOnExhibition(id);
                 return base.NoContent();
             }
             catch (NotFoundException ex)

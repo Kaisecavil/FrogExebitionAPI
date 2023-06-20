@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
-namespace FrogExebitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

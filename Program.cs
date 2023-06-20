@@ -1,22 +1,19 @@
-
-using FrogExebitionAPI.Database;
 using Microsoft.EntityFrameworkCore;
-using FrogExebitionAPI.Controllers;
 using Microsoft.AspNetCore.Identity;
-using FrogExebitionAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using FrogExebitionAPI.UoW;
-using FrogExebitionAPI.Swashbuckle;
-using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.Models;
+using FrogExhibitionPL.Swashbuckle;
 using Microsoft.OpenApi.Models;
-using FrogExebitionAPI.DTO.ExebitionDTOs;
-using FrogExebitionAPI.Helpers;
-using FrogExebitionAPI.DTO.VoteDtos;
+using FrogExhibitionDAL.Models;
+using FrogExhibitionBLL.Services;
+using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionDAL.Interfaces;
+using FrogExhibitionDAL.UoW;
+using FrogExhibitionDAL.Database;
+using FrogExhibitionBLL.Helpers;
 
-namespace FrogExebitionAPI
+namespace FrogExhibitionPL
 {
     public class Program
     {
@@ -44,8 +41,8 @@ namespace FrogExebitionAPI
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IFrogService, FrogService>();
-            builder.Services.AddScoped<IExebitionService, ExebitionService>();
-            builder.Services.AddScoped<IFrogOnExebitionService,FrogOnExebitionService>();
+            builder.Services.AddScoped<IExhibitionService, ExhibitionService>();
+            builder.Services.AddScoped<IFrogOnExhibitionService,FrogOnExhibitionService>();
             builder.Services.AddScoped<IVoteService, VoteService>();
             builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
             builder.Services.AddScoped<IFrogPhotoService, FrogPhotoService>();
@@ -53,7 +50,7 @@ namespace FrogExebitionAPI
             builder.Services.AddScoped<IUserProvider, UserProvider>();
 
             builder.Services.AddSingleton<ISortHelper<Frog>, SortHelper<Frog>>();
-            builder.Services.AddSingleton<ISortHelper<ExebitionDtoDetail>, SortHelper<ExebitionDtoDetail>>();
+            builder.Services.AddSingleton<ISortHelper<ExhibitionDtoDetail>, SortHelper<ExhibitionDtoDetail>>();
 
 
 
@@ -152,19 +149,19 @@ namespace FrogExebitionAPI
                     var service = scope.ServiceProvider.GetService<Seed>();
                     service.SeedApplicationContextAsync();
 
-                    var frogsOnExebitions = unitOfWork.FrogOnExebitions.GetAll();
+                    var frogsOnExhibitions = unitOfWork.FrogOnExhibitions.GetAll();
                     var users = userManager.Users.ToList();
                     foreach (var user in users)
                     {
                         var voteCount = 0;
-                        foreach (var frogOnExebition in frogsOnExebitions)
+                        foreach (var frogOnExhibition in frogsOnExhibitions)
                         { 
                             if (voteCount<3)
                             {
                                 var temp = new VoteDtoForCreate()
                                 {
                                     ApplicationUserId = user.Id,
-                                    FrogOnExebitionId = frogOnExebition.Id
+                                    FrogOnExhibitionId = frogOnExhibition.Id
                                 };
                                 try
                                 {

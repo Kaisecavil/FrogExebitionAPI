@@ -1,14 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.SwaggerGen;
-using System.ComponentModel;
-using System.Reflection;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
 
-namespace FrogExebitionAPI.Swashbuckle
+namespace FrogExhibitionPL.Swashbuckle
 {
     public class SchemaFilter : ISchemaFilter
     {

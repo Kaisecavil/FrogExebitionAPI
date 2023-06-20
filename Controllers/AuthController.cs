@@ -1,13 +1,10 @@
-﻿using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.Models;
-using FrogExebitionAPI.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionDAL.Models;
 
-namespace FrogExebitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

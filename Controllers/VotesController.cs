@@ -1,12 +1,11 @@
-﻿using FrogExebitionAPI.DTO.VoteDtos;
-using FrogExebitionAPI.Exceptions;
-using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.Models;
+﻿using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionPL.DTO.VoteDtos;
+using FrogExhibitionPL.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FrogExebitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,15 +1,13 @@
-﻿using FrogExebitionAPI.DTO.ApplicatonUserDTOs;
-using FrogExebitionAPI.Exceptions;
-using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.Models;
+﻿using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionDAL.Models;
+using FrogExhibitionPL.DTO.ApplicatonUserDTOs;
+using FrogExhibitionPL.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Security.Claims;
 
-namespace FrogExebitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

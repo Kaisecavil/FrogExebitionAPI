@@ -1,4 +1,4 @@
-﻿namespace FrogExebitionAPI.AppConstants
+﻿namespace FrogExhibitionPL.AppConstants
 {
     public class Constants
     {

@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FrogExebitionAPI.Database;
-using FrogExebitionAPI.Models;
-using Microsoft.IdentityModel.Tokens;
-using FrogExebitionAPI.UoW;
-using FrogExebitionAPI.Exceptions;
-using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.DTO.FrogDTOs;
-using AutoMapper;
+﻿using Microsoft.AspNetCore.Mvc;
+using FrogExhibitionPL.Exceptions;
+using FrogExhibitionPL.DTO.FrogDTOs;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FrogExebitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

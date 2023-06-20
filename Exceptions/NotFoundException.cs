@@ -1,4 +1,4 @@
-﻿namespace FrogExebitionAPI.Exceptions
+﻿namespace FrogExhibitionPL.Exceptions
 {
     public class NotFoundException : Exception
     {

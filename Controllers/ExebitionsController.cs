@@ -1,39 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FrogExebitionAPI.Database;
-using FrogExebitionAPI.Models;
-using FrogExebitionAPI.Interfaces;
-using FrogExebitionAPI.Exceptions;
-using Microsoft.EntityFrameworkCore;
-using FrogExebitionAPI.DTO.ExebitionDTOs;
-using FrogExebitionAPI.DTO.FrogDTOs;
+using FrogExhibitionPL.Exceptions;
+using FrogExhibitionPL.DTO.ExhibitionDTOs;
+using FrogExhibitionPL.DTO.FrogDTOs;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
-using FrogExebitionAPI.Services;
+using FrogExhibitionBLL.Interfaces;
 
-namespace ExebitionExebitionAPI.Controllers
+namespace ExhibitionExhibitionAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExebitionsController : ControllerBase
+    public class ExhibitionsController : ControllerBase
     {
-        private readonly ILogger<ExebitionsController> _logger;
-        private readonly IExebitionService _exebitionService;
+        private readonly ILogger<ExhibitionsController> _logger;
+        private readonly IExhibitionService _exebitionService;
 
-        public ExebitionsController(ILogger<ExebitionsController> logger, IExebitionService exebitionService)
+        public ExhibitionsController(ILogger<ExhibitionsController> logger, IExhibitionService exebitionService)
         {
             _logger = logger;
             _exebitionService = exebitionService;
         }
 
-        // GET: api/Exebitions
+        // GET: api/Exhibitions
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ExhibitionDtoDetail>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<ExebitionDtoDetail>>> GetExebitions()
+        public async Task<ActionResult<IEnumerable<ExhibitionDtoDetail>>> GetExhibitions()
         {
             try
             {
-                return base.Ok(await _exebitionService.GetAllExebitions());
+                return base.Ok(await _exebitionService.GetAllExhibitions());
             }
             catch (NotFoundException ex)
             {
@@ -43,13 +38,13 @@ namespace ExebitionExebitionAPI.Controllers
         }
 
         [HttpGet("sort/{sortParams}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ExhibitionDtoDetail>))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IEnumerable<ExebitionDtoDetail>>> GetSortedExebitions(string sortParams = " ")
+        public async Task<ActionResult<IEnumerable<ExhibitionDtoDetail>>> GetSortedExhibitions(string sortParams = " ")
         {
             try
             {
-                return base.Ok(await _exebitionService.GetAllExebitions(sortParams));
+                return base.Ok(await _exebitionService.GetAllExhibitions(sortParams));
             }
             catch (NotFoundException ex)
             {
@@ -58,15 +53,15 @@ namespace ExebitionExebitionAPI.Controllers
 
         }
 
-        // GET: api/Exebitions/5
+        // GET: api/Exhibitions/5
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(ExebitionDtoDetail))]
+        [ProducesResponseType(200, Type = typeof(ExhibitionDtoDetail))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<ExebitionDtoDetail>> GetExebition(Guid id)
+        public async Task<ActionResult<ExhibitionDtoDetail>> GetExhibition(Guid id)
         {
             try
             {
-                return base.Ok(await _exebitionService.GetExebition(id));
+                return base.Ok(await _exebitionService.GetExhibition(id));
             }
             catch (NotFoundException ex)
             {
@@ -76,7 +71,7 @@ namespace ExebitionExebitionAPI.Controllers
 
         }
 
-        // PUT: api/Exebitions/5
+        // PUT: api/Exhibitions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
@@ -84,12 +79,12 @@ namespace ExebitionExebitionAPI.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutExebition(Guid id, ExebitionDtoForCreate exebition)
+        public async Task<IActionResult> PutExhibition(Guid id, ExhibitionDtoForCreate exebition)
         {
             try
             {
                 //ModelState.IsValid
-                await _exebitionService.UpdateExebition(id, exebition);
+                await _exebitionService.UpdateExhibition(id, exebition);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
@@ -102,20 +97,20 @@ namespace ExebitionExebitionAPI.Controllers
             }
         }
 
-        // POST: api/Exebitions
+        // POST: api/Exhibitions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(IEnumerable<ExebitionDtoDetail>))]
+        [ProducesResponseType(201, Type = typeof(IEnumerable<ExhibitionDtoDetail>))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ExebitionDtoDetail>> PostExebition(ExebitionDtoForCreate exebition)
+        public async Task<ActionResult<ExhibitionDtoDetail>> PostExhibition(ExhibitionDtoForCreate exebition)
         {
             try
             {
-                var createdExebition = await _exebitionService.CreateExebition(exebition);
-                return base.CreatedAtAction("GetExebition", new { id = createdExebition.Id }, createdExebition);
+                var createdExhibition = await _exebitionService.CreateExhibition(exebition);
+                return base.CreatedAtAction("GetExhibition", new { id = createdExhibition.Id }, createdExhibition);
             }
             catch (NotFoundException ex)
             {
@@ -127,17 +122,17 @@ namespace ExebitionExebitionAPI.Controllers
             }
         }
 
-        // DELETE: api/Exebitions/5
+        // DELETE: api/Exhibitions/5
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteExebition(Guid id)
+        public async Task<IActionResult> DeleteExhibition(Guid id)
         {
             try
             {
-                await _exebitionService.DeleteExebition(id);
+                await _exebitionService.DeleteExhibition(id);
                 return base.NoContent();
             }
             catch (NotFoundException ex)
@@ -146,7 +141,7 @@ namespace ExebitionExebitionAPI.Controllers
             }
         }
 
-        // GET: api/Exebitions/5
+        // GET: api/Exhibitions/5
         [HttpGet("rating/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]

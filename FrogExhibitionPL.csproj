@@ -29,9 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FrogExhibitionBLL\FrogExhibitionBLL.csproj" />
+    <ProjectReference Include="..\FrogExhibitionDAL\FrogExhibitionDAL.csproj" />
   </ItemGroup>
 
 </Project>
