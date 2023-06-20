@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FrogExhibitionPL.Exceptions;
-using FrogExhibitionPL.DTO.ExhibitionDTOs;
-using FrogExhibitionPL.DTO.FrogDTOs;
 using Microsoft.AspNetCore.Authorization;
 using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionBLL.DTO.ExhibitionDTOs;
 
-namespace ExhibitionExhibitionAPI.Controllers
+namespace FrogExhibitionPL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
