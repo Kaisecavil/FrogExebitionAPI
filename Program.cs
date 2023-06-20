@@ -12,6 +12,7 @@ using FrogExhibitionDAL.Interfaces;
 using FrogExhibitionDAL.UoW;
 using FrogExhibitionDAL.Database;
 using FrogExhibitionBLL.Helpers;
+using FrogExhibitionBLL.DTO.ExhibitionDTOs;
 
 namespace FrogExhibitionPL
 {
