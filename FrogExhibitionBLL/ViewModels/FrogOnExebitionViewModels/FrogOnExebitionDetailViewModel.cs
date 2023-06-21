@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FrogExhibitionBLL.DTO.FrogOnExhibitionDTOs
+namespace FrogExhibitionBLL.ViewModels.FrogOnExhibitionViewModels
 {
-    public class FrogOnExhibitionDtoDetail
+    public class FrogOnExhibitionDetailViewModel
     {
         public Guid Id { get; set; }
         [Required]

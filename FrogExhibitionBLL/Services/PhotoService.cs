@@ -1,5 +1,5 @@
 ﻿using FrogExhibitionBLL.Helpers;
-using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionBLL.Interfaces.IService;
 
 namespace FrogExhibitionBLL.Services
 {

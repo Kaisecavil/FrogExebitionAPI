@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
-using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionBLL.DTO.FrogDTOs;
+using FrogExhibitionBLL.Exceptions;
+using FrogExhibitionBLL.Interfaces.IService;
+using FrogExhibitionDAL.Interfaces;
+using FrogExhibitionDAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Web.Http;
 
 namespace FrogExhibitionBLL.Services
 {
@@ -42,6 +48,7 @@ namespace FrogExhibitionBLL.Services
                 _logger.LogInformation("Frog Created");
                 var res = _mapper.Map<FrogDtoDetail>(createdFrog);
                 res.PhotoPaths = (await _frogPhotoService.GetFrogPhotoPathsAsync(createdFrog.Id)).ToList();
+                throw new HttpResponseException()
                 return res;
             }
             catch (Exception ex)

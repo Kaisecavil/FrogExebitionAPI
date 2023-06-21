@@ -1,7 +1,4 @@
-﻿using FrogExhibitionBLL.Interfaces;
-using FrogExhibitionPL.DTO.VoteDtos;
-using FrogExhibitionPL.Exceptions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FrogExhibitionBLL.Interfaces;
 using FrogExhibitionDAL.Models;
+using FrogExhibitionBLL.Interfaces.IService;
 
 namespace FrogExhibitionPL.Controllers
 {

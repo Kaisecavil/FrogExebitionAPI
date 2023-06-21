@@ -1,4 +1,4 @@
-﻿namespace FrogExhibitionPL.Exceptions
+﻿namespace FrogExhibitionBLL.Exceptions
 {
     public class BadRequestException : Exception
     {

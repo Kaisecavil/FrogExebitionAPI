@@ -1,6 +1,6 @@
 ﻿using FrogExhibitionDAL.Models;
 
-namespace FrogExhibitionBLL.Interfaces
+namespace FrogExhibitionBLL.Interfaces.IService
 {
     public interface IFrogPhotoService
     {

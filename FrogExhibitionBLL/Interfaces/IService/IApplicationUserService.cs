@@ -1,6 +1,6 @@
 ﻿using FrogExhibitionBLL.DTO.ApplicatonUserDTOs;
 
-namespace FrogExhibitionBLL.Interfaces
+namespace FrogExhibitionBLL.Interfaces.IService
 {
     public interface IApplicationUserService
     {

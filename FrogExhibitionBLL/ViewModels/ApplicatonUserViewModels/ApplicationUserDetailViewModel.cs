@@ -1,6 +1,6 @@
-﻿namespace FrogExhibitionBLL.DTO.ApplicatonUserDTOs
+﻿namespace FrogExhibitionBLL.ViewModels.ApplicatonUserViewModels
 {
-    public class ApplicationUserDtoDetail
+    public class ApplicationUserDetailViewModel
     {
         public string Id { get; set; }
         public string UserName { get; set; }

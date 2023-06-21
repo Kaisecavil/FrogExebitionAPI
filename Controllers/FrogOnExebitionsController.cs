@@ -1,11 +1,7 @@
-﻿using FrogExhibitionBLL.Interfaces;
-using FrogExhibitionPL.Exceptions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FrogExhibitionBLL.DTO.FrogOnExhibitionDTOs;
-using FrogExhibitionBLL.Services;
-using FrogExhibitionBLL.Interfaces;
 
 namespace FrogExhibitionPL.Controllers
 {

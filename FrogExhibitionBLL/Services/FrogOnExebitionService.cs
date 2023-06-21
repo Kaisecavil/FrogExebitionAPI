@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionBLL.Interfaces.IService;
 using Microsoft.EntityFrameworkCore;
 
 namespace FrogExhibitionBLL.Services

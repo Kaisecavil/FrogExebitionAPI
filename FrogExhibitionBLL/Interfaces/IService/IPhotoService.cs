@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace FrogExhibitionBLL.Interfaces
+namespace FrogExhibitionBLL.Interfaces.IService
 {
     public interface IPhotoService
     {

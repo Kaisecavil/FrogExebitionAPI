@@ -1,6 +1,6 @@
 ﻿using FrogExhibitionBLL.DTO.VoteDtos;
 
-namespace FrogExhibitionBLL.Interfaces
+namespace FrogExhibitionBLL.Interfaces.IService
 {
     public interface IVoteService
     {

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using FrogExhibitionBLL.AppConstants;
 
 namespace FrogExhibitionBLL.DTO.FrogDTOs
 {

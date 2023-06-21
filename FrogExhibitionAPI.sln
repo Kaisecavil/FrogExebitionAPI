@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrogExhibitionPL", "FrogExhibitionPL.csproj", "{7E753B2D-CB05-4E1D-8FDC-FFF4088B370C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrogExhibitionBLL", "FrogExhibitionBLL\FrogExhibitionBLL.csproj", "{456686DA-525A-453E-B1AA-288807DA901A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrogExhibitionDAL", "FrogExhibitionDAL\FrogExhibitionDAL.csproj", "{040DCBDE-2647-4F06-B961-FEE0572EB550}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{7E753B2D-CB05-4E1D-8FDC-FFF4088B370C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E753B2D-CB05-4E1D-8FDC-FFF4088B370C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E753B2D-CB05-4E1D-8FDC-FFF4088B370C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{456686DA-525A-453E-B1AA-288807DA901A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{456686DA-525A-453E-B1AA-288807DA901A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{456686DA-525A-453E-B1AA-288807DA901A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{456686DA-525A-453E-B1AA-288807DA901A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{040DCBDE-2647-4F06-B961-FEE0572EB550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{040DCBDE-2647-4F06-B961-FEE0572EB550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{040DCBDE-2647-4F06-B961-FEE0572EB550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{040DCBDE-2647-4F06-B961-FEE0572EB550}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

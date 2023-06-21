@@ -1,7 +1,4 @@
-﻿using FrogExhibitionBLL.Interfaces;
-using FrogExhibitionDAL.Models;
-using FrogExhibitionPL.DTO.ApplicatonUserDTOs;
-using FrogExhibitionPL.Exceptions;
+﻿using FrogExhibitionDAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

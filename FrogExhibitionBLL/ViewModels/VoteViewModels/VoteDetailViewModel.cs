@@ -1,6 +1,6 @@
-﻿namespace FrogExhibitionBLL.DTO.VoteDtos
+﻿namespace FrogExhibitionBLL.ViewModels.VoteViewModels
 {
-    public class VoteDtoDetail
+    public class VoteDetailViewModel
     {
         public Guid Id { get; set; }
         public string ApplicationUserId { get; set; }

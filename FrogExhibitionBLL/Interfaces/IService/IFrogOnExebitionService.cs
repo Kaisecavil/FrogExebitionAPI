@@ -1,6 +1,6 @@
 ﻿using FrogExhibitionBLL.DTO.FrogOnExhibitionDTOs;
 
-namespace FrogExhibitionBLL.Interfaces
+namespace FrogExhibitionBLL.Interfaces.IService
 {
     public interface IFrogOnExhibitionService
     {

@@ -7,12 +7,10 @@ using FrogExhibitionPL.Swashbuckle;
 using Microsoft.OpenApi.Models;
 using FrogExhibitionDAL.Models;
 using FrogExhibitionBLL.Services;
-using FrogExhibitionBLL.Interfaces;
 using FrogExhibitionDAL.Interfaces;
 using FrogExhibitionDAL.UoW;
 using FrogExhibitionDAL.Database;
 using FrogExhibitionBLL.Helpers;
-using FrogExhibitionBLL.DTO.ExhibitionDTOs;
 
 namespace FrogExhibitionPL
 {

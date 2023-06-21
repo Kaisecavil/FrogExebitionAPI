@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
-using FrogExhibitionBLL.Interfaces;
+using FrogExhibitionBLL.Interfaces.IService;
 using System.Linq.Dynamic.Core;
 
 namespace FrogExhibitionBLL.Helpers

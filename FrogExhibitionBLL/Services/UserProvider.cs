@@ -1,4 +1,4 @@
-﻿using FrogExhibitionBLL.Interfaces;
+﻿using FrogExhibitionBLL.Interfaces.IService;
 using System.Security.Claims;
 
 namespace FrogExhibitionBLL.Services

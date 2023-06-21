@@ -1,6 +1,5 @@
 ﻿using FrogExhibitionDAL.Interfaces;
 using FrogExhibitionDAL.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace FrogExhibitionDAL.Database

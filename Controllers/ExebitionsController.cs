@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FrogExhibitionPL.Exceptions;
 using Microsoft.AspNetCore.Authorization;
-using FrogExhibitionBLL.Interfaces;
 using FrogExhibitionBLL.DTO.ExhibitionDTOs;
 
 namespace FrogExhibitionPL.Controllers
